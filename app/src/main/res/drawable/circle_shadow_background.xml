@@ -1,0 +1,18 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <!-- Outer shadow -->
+        <shape>
+
+            <solid android:color="#A14A4A4A" /> <!-- Semi-transparent black -->
+            <corners android:radius="60dp" /> <!-- Matches your circular shape -->
+        </shape>
+    </item>
+    <item  android:left="2dp" android:right="2dp"   > <!-- Inner content offset -->
+        <shape
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <solid android:color="#5C5C5C" />
+            <corners android:radius="60dp" />
+        </shape>
+    </item>
+</layer-list>
