@@ -3,6 +3,7 @@ package com.example.jobify
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import com.example.jobify.ui.activites.fragments.SignUpFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         // Load the LoginFragment dynamically
         if (savedInstanceState == null) {
             val fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.fragment_container, LoginFragment()) // Ensure fragment_container exists in activity_main.xml
+            fragmentTransaction.replace(R.id.fragment_container, SignUpFragment()) // Ensure fragment_container exists in activity_main.xml
             fragmentTransaction.commit()
         }
     }
