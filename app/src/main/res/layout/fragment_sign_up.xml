@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:background="#0A66C2"
-    tools:context=".ui.fragments.SignUpFragment">
+    >
 
 <!-- Circular Logo -->
 <ImageView
