@@ -8,6 +8,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main) // Use activity layout instead of fragment_login
-
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.hide()
+        // Load the LoginFragment dynamically
+        if (savedInstanceState == null) {
+            val fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment_container, LoginFragment()) // Ensure fragment_container exists in activity_main.xml
+            fragmentTransaction.commit()
+        }
     }
 }
