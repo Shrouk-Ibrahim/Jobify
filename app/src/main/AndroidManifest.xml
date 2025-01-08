@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Add internet permission for Firebase -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -12,21 +15,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jobify"
         tools:targetApi="31">
+
+        <!-- AuthActivity -->
         <activity
             android:name=".ui.activites.AuthActivity"
             android:exported="false" />
 
+        <!-- com.example.jobify.ui.activites.MainActivity -->
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activites.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light">
-            />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+    </application>
 </manifest>

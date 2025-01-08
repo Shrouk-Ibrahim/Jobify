@@ -1,16 +1,21 @@
 package com.example.jobify.ui.fragments
-import com.example.jobify.ui.Resource
+
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.jobify.R
 import com.example.jobify.databinding.FragmentLoginBinding
 import com.example.jobify.viewmodel.AuthViewModel
+import com.example.jobify.ui.Resource
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class LoginFragment : Fragment() {
 
@@ -30,15 +35,41 @@ class LoginFragment : Fragment() {
 
         // Initialize ViewModel
         viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+// Set up password visibility toggle for the start icon
+        binding.passwordInputLayout.setStartIconOnClickListener {
+            togglePasswordVisibility(binding.passwordLoginField, binding.passwordInputLayout)
+        }
+
 
         // Set up login button click listener
         binding.loginButton.setOnClickListener {
             val email = binding.emailLoginField.text.toString().trim()
             val password = binding.passwordLoginField.text.toString().trim()
 
-            // Validate inputs
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
+            // Clear previous errors
+            binding.emailLoginField.error = null
+            binding.passwordLoginField.error = null
+
+            // Test Case 1: Empty fields
+            if (email.isEmpty()) {
+                binding.emailLoginField.error = "Email is required"
+                return@setOnClickListener
+            }
+
+            if (password.isEmpty()) {
+                binding.passwordLoginField.error = "Password is required"
+                return@setOnClickListener
+            }
+
+            // Test Case 2: Invalid email format
+            if (!isValidEmail(email)) {
+                binding.emailLoginField.error = "Invalid email format"
+                return@setOnClickListener
+            }
+
+            // Test Case 3: Invalid password format
+            if (!isValidPassword(password)) {
+                binding.passwordLoginField.error = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
                 return@setOnClickListener
             }
 
@@ -56,19 +87,44 @@ class LoginFragment : Fragment() {
         viewModel.authState.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is Resource.Loading -> {
-                    // Show loading indicator (e.g., ProgressBar)
+                    // Test Case 4: Show loading indicator
                     Toast.makeText(requireContext(), "Logging in...", Toast.LENGTH_SHORT).show()
                 }
                 is Resource.Success -> {
-                    // Navigate to HomeFragment
+                    // Test Case 5: Successful login
                     Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 }
                 is Resource.Error -> {
-                    // Show error message
-                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                    // Test Case 6: Login failed (Firebase error)
+                    Toast.makeText(requireContext(), "Login failed: ${state.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         })
+    }
+    private fun togglePasswordVisibility(editText: TextInputEditText, textInputLayout: TextInputLayout) {
+        val isPasswordVisible = editText.transformationMethod == null
+        if (isPasswordVisible) {
+            // Hide password
+            editText.transformationMethod = PasswordTransformationMethod.getInstance()
+            textInputLayout.startIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_visibility_off)
+        } else {
+            // Show password
+            editText.transformationMethod = null
+            textInputLayout.startIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_visibility)
+        }
+        // Move cursor to the end of the text
+        editText.setSelection(editText.text?.length ?: 0)
+    }
+
+    // Function to validate email format
+    private fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    // Function to validate password format
+    private fun isValidPassword(password: String): Boolean {
+        val passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+        return password.matches(passwordRegex.toRegex())
     }
 }

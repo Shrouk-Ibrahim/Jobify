@@ -74,6 +74,7 @@
                 <!-- Email Field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
+                    android:id="@+id/emailInputLayout"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="10dp"
@@ -81,10 +82,11 @@
                     app:boxCornerRadiusTopStart="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
-                    app:boxCornerRadiusBottomEnd="10dp">
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    >
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/email_login_field"
+                        android:id="@+id/emailLoginField"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:hint="Email"
@@ -96,11 +98,13 @@
                         android:inputType="textEmailAddress"
                         android:drawableLeft="@drawable/ic_email"
                         android:drawablePadding="12dp"
-                        android:padding="8dp" />
+                        android:padding="8dp"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Password Field -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/passwordInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
@@ -109,10 +113,12 @@
                     app:boxCornerRadiusTopStart="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
-                    app:boxCornerRadiusBottomEnd="10dp">
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    app:startIconDrawable="@drawable/ic_visibility_off"
+                    app:startIconTint="@color/primaryColor">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/password_login_field"
+                        android:id="@+id/passwordLoginField"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:hint="Enter password"
@@ -140,7 +146,13 @@
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
-
+                <!-- ProgressBar -->
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone" />
                 <!-- Sign Up Section -->
                 <LinearLayout
                     android:layout_width="wrap_content"

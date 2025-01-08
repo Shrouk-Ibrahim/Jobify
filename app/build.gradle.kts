@@ -17,6 +17,8 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        multiDexEnabled =true
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,6 +46,20 @@ android {
 
 dependencies {
 // Firebase dependencies
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    // Firebase Firestore dependency
+    implementation ("com.google.firebase:firebase-firestore:25.1.1") // Use the latest version
+    implementation ("androidx.multidex:multidex:2.0.1")
+    // Firebase Authentication dependency (if not already added)
+    implementation ("com.google.firebase:firebase-auth:23.1.0")// Use the latest version
+// BCrypt library for password hashing
+    implementation ("at.favre.lib:bcrypt:0.10.2") // Use the latest version
+    // Other Firebase dependencies (optional)
+    implementation ("com.google.firebase:firebase-core:21.1.1")
+    // Add the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-auth")
     implementation ("com.google.firebase:firebase-auth-ktx:23.1.0") // For Firebase Authentication
     implementation ("com.google.firebase:firebase-firestore-ktx:25.1.1") // Optional: For Firestore
     implementation("androidx.core:core-ktx:1.15.0")
