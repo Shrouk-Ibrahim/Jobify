@@ -17,6 +17,6 @@ class MainActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
 
         // Initialize Firestore
-        val db = FirebaseFirestore.getInstance()
+        val db = FirebaseFirestore.getInstance( )
     }
 }
