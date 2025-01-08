@@ -1,1 +1,8 @@
+<<<<<<< HEAD
+<resources>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
+=======
 <resources></resources>
+>>>>>>> 228617f7903a0c724c76041e12f659b33267aed0
