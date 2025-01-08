@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.jobify.ui.activites.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
