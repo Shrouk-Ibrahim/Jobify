@@ -48,6 +48,9 @@ dependencies {
 // Firebase dependencies
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.1")
     // Firebase Firestore dependency
     implementation ("com.google.firebase:firebase-firestore:25.1.1") // Use the latest version
     implementation ("androidx.multidex:multidex:2.0.1")
