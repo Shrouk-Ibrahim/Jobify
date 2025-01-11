@@ -1,6 +1,3 @@
-Here’s a cleaned-up and organized version of your README file: 
-
----
 
 # **Project Directory Structure**
 
