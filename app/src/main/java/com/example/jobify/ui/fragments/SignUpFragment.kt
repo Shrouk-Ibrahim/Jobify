@@ -19,13 +19,17 @@ import com.google.android.material.textfield.TextInputLayout
 
 class SignupFragment : Fragment() {
 
+    // ViewBinding for the fragment
     private lateinit var binding: FragmentSignUpBinding
+
+    // ViewModel for handling authentication logic
     private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout using ViewBinding
         binding = FragmentSignUpBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -33,10 +37,10 @@ class SignupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize ViewModel
+        // Initialize the ViewModel
         viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
-// Set up password visibility toggle for the start icon
+        // Set up password visibility toggle for the start icon
         binding.passwordInputLayout.setStartIconOnClickListener {
             togglePasswordVisibility(binding.passwordSignupField, binding.passwordInputLayout)
         }
@@ -45,8 +49,10 @@ class SignupFragment : Fragment() {
         binding.confirmPasswordInputLayout.setStartIconOnClickListener {
             togglePasswordVisibility(binding.confirmPasswordSignupField, binding.confirmPasswordInputLayout)
         }
+
         // Set up signup button click listener
         binding.signupButton.setOnClickListener {
+            // Get user input from name, email, password, and confirm password fields
             val name = binding.nameSignupField.text.toString().trim()
             val email = binding.emailSignupField.text.toString().trim()
             val password = binding.passwordSignupField.text.toString().trim()
@@ -58,78 +64,86 @@ class SignupFragment : Fragment() {
             binding.passwordInputLayout.error = null
             binding.confirmPasswordInputLayout.error = null
 
-            // Test Case 1: Empty fields
+            // Test Case 1: Check if name field is empty
             if (name.isEmpty()) {
                 binding.nameSignupField.error = "Name is required"
                 return@setOnClickListener
             }
 
+            // Test Case 2: Check if email field is empty
             if (email.isEmpty()) {
                 binding.emailSignupField.error = "Email is required"
                 return@setOnClickListener
             }
 
+            // Test Case 3: Check if password field is empty
             if (password.isEmpty()) {
                 binding.passwordSignupField.error = "Password is required"
                 return@setOnClickListener
             }
 
+            // Test Case 4: Check if confirm password field is empty
             if (confirmPassword.isEmpty()) {
                 binding.confirmPasswordSignupField.error = "Confirm Password is required"
                 return@setOnClickListener
             }
 
-            // Test Case 2: Invalid email format
+            // Test Case 5: Validate email format
             if (!isValidEmail(email)) {
                 binding.emailSignupField.error = "Invalid email format"
                 return@setOnClickListener
             }
 
-            // Test Case 3: Passwords don't match
+            // Test Case 6: Check if passwords match
             if (password != confirmPassword) {
                 binding.confirmPasswordSignupField.error = "Passwords do not match"
                 return@setOnClickListener
             }
 
-            // Test Case 4: Invalid password format
+            // Test Case 7: Validate password format
             if (!isValidPassword(password)) {
                 binding.passwordSignupField.error = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
                 return@setOnClickListener
             }
 
-            // Call ViewModel to perform signup
+            // Call ViewModel to perform signup with the provided name, email, and password
             viewModel.signup(name, email, password)
         }
 
         // Set up sign-in link click listener
         binding.signUpLink.setOnClickListener {
-            // Navigate to LoginFragment
+            // Navigate to the LoginFragment using the navigation graph
             findNavController().navigate(R.id.action_signupFragment_to_loginFragment)
         }
 
-        // Observe authentication state
+        // Observe authentication state changes from the ViewModel
         viewModel.authState.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is Resource.Loading -> {
-                    // Test Case 5: Show loading indicator
+                    // Test Case 8: Show loading indicator
                     Toast.makeText(requireContext(), "Signing up...", Toast.LENGTH_SHORT).show()
                 }
                 is Resource.Success -> {
-                    // Test Case 6: Successful signup
+                    // Test Case 9: Successful signup
                     Toast.makeText(requireContext(), "Signup successful!", Toast.LENGTH_SHORT).show()
+                    // Navigate to the HomeFragment
                     findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
                 }
                 is Resource.Error -> {
-                    // Test Case 7: Signup failed (Firebase error)
+                    // Test Case 10: Signup failed (Firebase error)
                     if (state.message == "Email already in use") {
+                        // Show error message for email already in use
                         binding.emailSignupField.error = state.message
                     } else {
+                        // Show generic error message
                         Toast.makeText(requireContext(), "Signup failed: ${state.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         })
     }
+
+    // Function to toggle password visibility
     private fun togglePasswordVisibility(editText: TextInputEditText, textInputLayout: TextInputLayout) {
         val isPasswordVisible = editText.transformationMethod == null
         if (isPasswordVisible) {
@@ -144,6 +158,7 @@ class SignupFragment : Fragment() {
         // Move cursor to the end of the text
         editText.setSelection(editText.text?.length ?: 0)
     }
+
     // Function to validate email format
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()

@@ -8,18 +8,21 @@ import com.google.firebase.auth.FirebaseUser
 
 class AuthViewModel : ViewModel() {
 
+    // Repository instance to handle authentication logic
     private val authRepository = AuthRepository()
 
-    // LiveData to observe authentication state
+    // LiveData to observe authentication state changes
     val authState: LiveData<Resource<FirebaseUser>> get() = authRepository.authState
 
-    // Signup function
+    // Function to handle user signup
     fun signup(name: String, email: String, password: String) {
+        // Call the signup function in the AuthRepository
         authRepository.signup(name, email, password)
     }
 
-    // Login function
+    // Function to handle user login
     fun login(email: String, password: String) {
+        // Call the login function in the AuthRepository
         authRepository.login(email, password)
     }
 }
