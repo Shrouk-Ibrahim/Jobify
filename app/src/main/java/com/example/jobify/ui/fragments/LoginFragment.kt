@@ -93,18 +93,27 @@ class LoginFragment : Fragment() {
         viewModel.authState.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is Resource.Loading -> {
-                    // Test Case 5: Show loading indicator
+                    // Show loading indicator
                     Toast.makeText(requireContext(), "Logging in...", Toast.LENGTH_SHORT).show()
                 }
                 is Resource.Success -> {
-                    // Test Case 6: Successful login
+                    // Login successful
                     Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
-                    // Navigate to the HomeFragment
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 }
                 is Resource.Error -> {
-                    // Test Case 7: Login failed (Firebase error)
-                    Toast.makeText(requireContext(), "Login failed: ${state.message}", Toast.LENGTH_SHORT).show()
+                    // Login failed
+                    when (state.message) {
+                        "No account found with this email. Please sign up." -> {
+                            binding.emailLoginField.error = state.message
+                        }
+                        "Invalid password. Please try again." -> {
+                            binding.passwordLoginField.error = state.message
+                        }
+                        else -> {
+                            Toast.makeText(requireContext(), "Login failed: ${state.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         })
