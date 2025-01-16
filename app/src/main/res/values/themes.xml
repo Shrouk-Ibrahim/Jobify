@@ -2,6 +2,8 @@
 <resources>
 
     <style name="Theme.Jobify" parent="android:Theme.Material.Light.NoActionBar" >
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/primaryColor</item>
     </style>
     <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator" >
