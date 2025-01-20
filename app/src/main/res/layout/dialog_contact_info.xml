@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
+    <EditText
         android:id="@+id/emailEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -28,6 +28,7 @@
         android:inputType="none"
     android:focusable="false"
     android:clickable="false"
+    android:enabled="false"
     android:layout_marginBottom="16dp"
     android:drawableStart="@drawable/ic_email"
     android:drawablePadding="8dp"

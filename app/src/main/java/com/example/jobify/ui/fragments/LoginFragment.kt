@@ -99,8 +99,7 @@ class LoginFragment : Fragment() {
                 is Resource.Success -> {
                     // Login successful
                     Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
-                }
+                    findNavController().navigate(R.id.action_loginFragment_to_mainActivity)                }
                 is Resource.Error -> {
                     // Login failed
                     when (state.message) {

@@ -127,7 +127,7 @@ class SignupFragment : Fragment() {
                     // Test Case 9: Successful signup
                     Toast.makeText(requireContext(), "Signup successful!", Toast.LENGTH_SHORT).show()
                     // Navigate to the HomeFragment
-                    findNavController().navigate(R.id.action_signupFragment_to_profileFragment)
+                    findNavController().navigate(R.id.action_loginFragment_to_mainActivity)
                 }
                 is Resource.Error -> {
                     // Test Case 10: Signup failed (Firebase error)

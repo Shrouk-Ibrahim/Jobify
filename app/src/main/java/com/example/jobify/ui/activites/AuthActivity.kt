@@ -2,8 +2,8 @@ package com.example.jobify.ui.activites
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.jobify.R
 
@@ -12,13 +12,18 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        // Set up Navigation Component
-        val navController = findNavController(R.id.nav_host_fragment_auth)
-        NavigationUI.setupActionBarWithNavController(this, navController)
+        // Get NavController
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_auth) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        // Remove ActionBar setup
     }
 
-    // Handle back button in fragments
+    // Handle back button without ActionBar
     override fun onSupportNavigateUp(): Boolean {
-        return findNavController(R.id.nav_host_fragment_auth).navigateUp() || super.onSupportNavigateUp()
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_auth) as? NavHostFragment
+        return navHostFragment?.navController?.navigateUp() ?: false
     }
 }
