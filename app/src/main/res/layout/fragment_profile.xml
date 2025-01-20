@@ -27,7 +27,7 @@
                     android:id="@+id/cardView"
                     android:layout_width="match_parent"
                     android:layout_height="290dp"
-                    android:layout_margin="16dp"
+                    android:layout_margin="1dp"
                     app:cardCornerRadius="50dp"
                     app:cardElevation="9dp">
 
@@ -36,17 +36,38 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp"
+                        android:padding="1dp"
                         android:background="@drawable/card"
                         android:gravity="center">
 
-                        <!-- Image -->
-                        <ImageView
-                            android:id="@+id/profileImage"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:layout_marginBottom="9dp"
-                            android:src="@drawable/profile" />
+                        <!-- Image with Camera Icon -->
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent">
+
+                            <!-- Profile Image -->
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/profileImage"
+                                android:layout_width="150dp"
+                                android:layout_height="150dp"
+                                android:src="@drawable/profile"
+                                app:civ_border_width="2dp"
+                                app:civ_border_color="@android:color/white" />
+
+                            <!-- Camera Icon -->
+                            <ImageView
+                                android:id="@+id/cameraIcon"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/baseline_camera_alt_24"
+                            android:layout_gravity="bottom|end"
+                            android:background="@drawable/circle_shadow_background"
+                            android:padding="8dp" />
+                        </FrameLayout>
 
                         <!-- Name and Edit Icon Row -->
                         <LinearLayout
@@ -143,12 +164,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="My Files"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:fontFamily="sans-serif-medium"
-                    android:layout_marginTop="16dp" />
+                    android:text="My Files"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
                 <!-- Horizontal ScrollView for CV/Portfolio -->
                 <HorizontalScrollView
@@ -162,7 +184,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-
                         android:padding="8dp">
 
                         <!-- CV Box -->
@@ -179,28 +200,33 @@
                             android:focusable="true"
                             android:onClick="onCvClick">
 
-                            <ImageView
-                                android:id="@+id/cvIcon"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_cv"
-                                android:scaleType="centerCrop"
-                                android:contentDescription="CV Icon"
-                                android:layout_marginEnd="8dp"
-                                android:visibility="visible" />
 
                             <!-- CV Name -->
+
+
                             <TextView
                                 android:id="@+id/cvName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" CV                                 "
-                                android:textSize="14sp"
-                                android:textColor="@android:color/black"
+                                android:layout_marginEnd="2dp"
                                 android:gravity="start"
-                                android:layout_marginEnd="8dp" />
+                                android:text=" CV   "
+                                android:textColor="@android:color/black"
+                                android:textSize="14sp" />
 
-                            <!-- Upload/Edit Icon -->
+
+
+                            <!-- CV Status Text -->
+                            <TextView
+                                android:id="@+id/cvStatusText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:padding="8dp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:textColor="@color/primaryColor" />
                             <ImageView
                                 android:id="@+id/cvUploadIcon"
                                 android:layout_width="24dp"
@@ -227,28 +253,32 @@
                             android:focusable="true"
                             android:onClick="onPortfolioClick">
 
+
+
                             <!-- Portfolio Name -->
                             <TextView
                                 android:id="@+id/portfolioName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" upload Portfolio"
+                                android:text=" Portfolio"
                                 android:textSize="14sp"
                                 android:textColor="@android:color/black"
                                 android:gravity="start"
                                 android:layout_marginEnd="8dp" />
 
-                            <!-- Portfolio Icon -->
-                            <ImageView
-                                android:id="@+id/portfolioIcon"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_portfolio"
-                                android:scaleType="centerCrop"
-                                android:contentDescription="Portfolio Icon"
-                                android:layout_marginEnd="8dp"
-                                android:visibility="visible" />
 
+
+                            <!-- Portfolio Status Text -->
+                            <TextView
+                                android:id="@+id/portfolioStatusText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:padding="8dp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:textColor="@color/primaryColor" />
                             <!-- Upload/Edit Icon -->
                             <ImageView
                                 android:id="@+id/portfolioUploadIcon"
@@ -260,6 +290,7 @@
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:onClick="onUploadPortfolioClick" />
+
                         </LinearLayout>
                     </LinearLayout>
                 </HorizontalScrollView>
@@ -272,8 +303,6 @@
                     android:background="#57000000"
                     android:layout_marginTop="16dp"
                     android:layout_marginHorizontal="16dp" />
-
-
 
                 <!-- TextView: Saved Jobs -->
                 <LinearLayout
@@ -326,15 +355,14 @@
                             android:layout_marginEnd="16dp"
                             app:cardCornerRadius="8dp"
                             app:cardElevation="4dp"
-                            android:background="@drawable/card"> <!-- Set background to white -->
+                            android:background="@drawable/card">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
                                 android:padding="16dp"
-
-                                android:background="@android:color/white"> <!-- Set background to white -->
+                                android:background="@android:color/white">
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -367,7 +395,8 @@
                                     android:textColor="@android:color/white" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
-     <!-- Saved Job 2 -->
+
+                        <!-- Saved Job 2 -->
                         <androidx.cardview.widget.CardView
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
@@ -412,8 +441,6 @@
                                     android:textColor="@android:color/white" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
-
-
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -469,7 +496,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="8dp">
-                        <!-- track Job 1 -->
+
+                        <!-- Track Job 1 -->
                         <androidx.cardview.widget.CardView
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
@@ -514,7 +542,8 @@
                                     android:textColor="@android:color/white" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
-                        <!-- track Job 2 -->
+
+                        <!-- Track Job 2 -->
                         <androidx.cardview.widget.CardView
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
@@ -559,13 +588,12 @@
                                     android:textColor="@android:color/white" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
-
-                        <!-- Add your track applications content here -->
                     </LinearLayout>
                 </HorizontalScrollView>
-
             </LinearLayout>
         </ScrollView>
+
+        <!-- FrameLayout for Fragments -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

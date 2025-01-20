@@ -19,8 +19,8 @@
 
         <!-- Action to navigate to HomeFragment -->
         <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_loginFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <!-- Signup Fragment -->
@@ -37,15 +37,15 @@
 
         <!-- Action to navigate to HomeFragment -->
         <action
-            android:id="@+id/action_signupFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_signupFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
-    <!-- Home Fragment -->
+    <!-- Profile Fragment -->
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.jobify.ui.fragments.HomeFragment"
+        android:id="@+id/profileFragment"
+        android:name="com.example.jobify.ui.fragments.ProfileFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>
