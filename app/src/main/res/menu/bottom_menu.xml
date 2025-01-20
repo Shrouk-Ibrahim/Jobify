@@ -1,28 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- Home Menu Item -->
     <item
         android:id="@+id/homeFragment"
-    android:title="Home"
-    android:icon="@drawable/baseline_home_24" /> <!-- Replace with your icon -->
-
-    <!-- Jobs Menu Item -->
+        android:title="Home"
+        android:icon="@drawable/baseline_home_24" />
     <item
         android:id="@+id/jobsFragment"
-    android:title="Jobs"
-    android:icon="@drawable/baseline_shopping_bag_24" /> <!-- Replace with your icon -->
-
-    <!-- Notifications Menu Item -->
+        android:title="Jobs"
+        android:icon="@drawable/baseline_shopping_bag_24" />
     <item
         android:id="@+id/notificationsFragment"
-    android:title="Notifications"
-    android:icon="@drawable/baseline_notifications_none_24" /> <!-- Replace with your icon -->
-
-    <!-- Profile Menu Item -->
+        android:title="Notifications"
+        android:icon="@drawable/baseline_notifications_none_24" />
     <item
         android:id="@+id/profileFragment"
-    android:title="Profile"
-    android:icon="@drawable/baseline_account_circle_24" /> <!-- Replace with your icon -->
-
+        android:title="Profile"
+        android:icon="@drawable/baseline_account_circle_24" />
 </menu>

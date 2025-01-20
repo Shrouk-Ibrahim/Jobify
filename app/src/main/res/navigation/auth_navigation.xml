@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,10 +16,10 @@
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
 
-        <!-- Action to navigate to HomeFragment -->
+        <!-- Action to navigate to MainActivity -->
         <action
-            android:id="@+id/action_loginFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            android:id="@+id/action_loginFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
     </fragment>
 
     <!-- Signup Fragment -->
@@ -35,17 +34,15 @@
             android:id="@+id/action_signupFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
 
-        <!-- Action to navigate to HomeFragment -->
+        <!-- Action to navigate to MainActivity -->
         <action
-            android:id="@+id/action_signupFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            android:id="@+id/action_signupFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
     </fragment>
 
-    <!-- Profile Fragment -->
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.example.jobify.ui.fragments.ProfileFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_profile" />
-
+    <!-- MainActivity Destination -->
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.jobify.ui.activites.MainActivity"
+        android:label="MainActivity" />
 </navigation>

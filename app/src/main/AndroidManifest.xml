@@ -1,7 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Add internet permission for Firebase -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -35,17 +34,16 @@
         </activity>
 
         <!-- AuthActivity -->
+
         <activity
             android:name=".ui.activites.AuthActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:exported="true" />
 
         <!-- MainActivity -->
         <activity
             android:name=".ui.activites.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light" />
-
-      
     </application>
 </manifest>
