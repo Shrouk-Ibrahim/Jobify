@@ -37,7 +37,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="1dp"
-                        android:background="@drawable/card"
+                        android:background="@drawable/card_style"
                         android:gravity="center">
 
                         <!-- Image with Camera Icon -->
@@ -355,7 +355,7 @@
                             android:layout_marginEnd="16dp"
                             app:cardCornerRadius="8dp"
                             app:cardElevation="4dp"
-                            android:background="@drawable/card">
+                            android:background="@drawable/card_style">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
