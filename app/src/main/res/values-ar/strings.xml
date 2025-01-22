@@ -1,0 +1,52 @@
+<resources>
+    <string name="profile_name">لا يوجد اسم</string>
+    <string name="job_title">لا يوجد وظيفة</string>
+    <string name="faculty_text">لا يوجد كلية</string>
+    <string name="address_text">لا يوجد عنوان</string>
+    <string name="contact_info">معلومات الاتصال</string>
+    <!-- Files Section -->
+    <string name="my_files">ملفاتي</string>
+    <string name="cv">السيرة الذاتية    </string>
+
+    <string name="cvStatusText">انقر للمزيد</string>
+
+
+    <!-- Saved Jobs Section -->
+    <string name="saved_jobs">الوظائف المحفوظة</string>
+    <string name="see_more">عرض المزيد</string>
+    <string name="android_developer">مطور أندرويد</string>
+    <string name="robusta">روبوستا</string>
+    <string name="location_remote">الإسكندرية، مصر (عن بعد)</string>
+    <string name="apply">تقدم</string>
+
+    <!-- Track Applications Section -->
+    <string name="track_applications_status">تتبع حالة التقديمات</string>
+    <string name="under_evaluation">قيد التقييم</string>
+    <string name="refuse">رفض</string>
+
+    <!-- Contact Info Dialog -->
+    <string name="email_label">البريد الإلكتروني</string>
+    <string name="email_hint">أدخل بريدك الإلكتروني</string>
+    <string name="linkedin_label">لينكد إن</string>
+    <string name="linkedin_hint">أدخل رابط ملفك الشخصي على لينكد إن</string>
+    <string name="github_label">جيت هاب</string>
+    <string name="github_hint">أدخل رابط ملفك الشخصي على جيت هاب</string>
+    <string name="phone_label">الهاتف</string>
+    <string name="phone_hint">أدخل رقم هاتفك</string>
+    <string name="save_button">حفظ</string>
+    <string name="cancel_button">إلغاء</string>
+
+    <!-- Edit Profile Dialog -->
+    <!-- Labels -->
+    <string name="name_label">الاسم</string>
+    <string name="job_title_label">المسمى الوظيفي</string>
+    <string name="faculty_label">الكلية</string>
+    <string name="address_label">العنوان</string>
+
+    <!-- Hints -->
+    <string name="name_hint">أدخل اسمك</string>
+    <string name="job_title_hint">أدخل المسمى الوظيفي</string>
+    <string name="faculty_hint">أدخل الكلية</string>
+    <string name="address_hint">أدخل العنوان</string>
+
+</resources>

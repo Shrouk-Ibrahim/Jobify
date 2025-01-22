@@ -6,35 +6,59 @@
     android:padding="16dp">
 
     <!-- Name -->
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/name_label" />
+
     <EditText
         android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name"
+        android:hint="@string/name_hint"
         android:inputType="textPersonName" />
 
     <!-- Job Title -->
+    <TextView
+        android:id="@+id/jobTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/job_title_label" />
+
     <EditText
         android:id="@+id/jobTitleEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Job Title"
+        android:hint="@string/job_title_hint"
         android:inputType="text" />
 
     <!-- Faculty -->
+    <TextView
+        android:id="@+id/facultyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/faculty_label" />
+
     <EditText
         android:id="@+id/facultyEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Faculty"
+        android:hint="@string/faculty_hint"
         android:inputType="text" />
 
     <!-- Address -->
+    <TextView
+        android:id="@+id/addressTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/address_label" />
+
     <EditText
         android:id="@+id/addressEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Address"
+        android:hint="@string/address_hint"
         android:inputType="text" />
 
 </LinearLayout>
