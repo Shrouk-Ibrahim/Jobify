@@ -72,18 +72,14 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
             uploadFile("cv")
         }
 
-        binding.portfolioUploadIcon.setOnClickListener {
-            uploadFile("portfolio")
-        }
+
 
         // Set click listeners for CV and Portfolio status text
         binding.cvStatusText.setOnClickListener {
             showFile("cv")
         }
 
-        binding.portfolioStatusText.setOnClickListener {
-            showFile("portfolio")
-        }
+
     }
 
     private fun openImagePicker() {
@@ -242,14 +238,6 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
                         }
 
                         // Update Portfolio status
-                        val portfolioBase64 = document.getString("portfolioBase64")
-                        if (!portfolioBase64.isNullOrEmpty()) {
-                            binding.portfolioStatusText.text = "click to show"
-                        } else {
-                            binding.portfolioStatusText.text = ""
-                        }
-                    } else {
-                        Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

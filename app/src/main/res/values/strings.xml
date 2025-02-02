@@ -1,4 +1,52 @@
 <resources>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile_name">No Name</string>
+    <string name="job_title">No Job Title</string>
+    <string name="faculty_text">No Faculty</string>
+    <string name="address_text">No Address</string>
+    <string name="contact_info">Contact Info</string>
+    <!-- Files Section -->
+    <string name="my_files">My Files</string>
+    <string name="cv">CV    </string>
+    <string name="cvStatusText">click to show</string>
+
+
+    <!-- Saved Jobs Section -->
+    <string name="saved_jobs">Saved Jobs</string>
+    <string name="see_more">See More</string>
+    <string name="android_developer">Android Developer</string>
+    <string name="robusta">ROBUSTA</string>
+    <string name="location_remote">Alexandria, Egypt (Remote)</string>
+    <string name="apply">Apply</string>
+
+    <!-- Track Applications Section -->
+    <string name="track_applications_status">Track Applications Status</string>
+    <string name="under_evaluation">Under Evaluation</string>
+    <string name="refuse">Refuse</string>
+
+
+    <!-- Contact Info Dialog -->
+    <string name="email_label">Email</string>
+    <string name="email_hint">Enter your email</string>
+    <string name="linkedin_label">LinkedIn</string>
+    <string name="linkedin_hint">Enter your LinkedIn profile</string>
+    <string name="github_label">GitHub</string>
+    <string name="github_hint">Enter your GitHub profile</string>
+    <string name="phone_label">Phone</string>
+    <string name="phone_hint">Enter your phone number</string>
+    <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
+
+    <!-- Edit Profile Dialog -->
+    <!-- Labels -->
+    <string name="name_label">Name</string>
+    <string name="job_title_label">Job Title</string>
+    <string name="faculty_label">Faculty</string>
+    <string name="address_label">Address</string>
+
+    <!-- Hints -->
+    <string name="name_hint">Enter your name</string>
+    <string name="job_title_hint">Enter your job title</string>
+    <string name="faculty_hint">Enter your faculty</string>
+    <string name="address_hint">Enter your address</string>
+
 </resources>

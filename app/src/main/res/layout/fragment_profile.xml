@@ -64,9 +64,9 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:src="@drawable/baseline_camera_alt_24"
-                            android:layout_gravity="bottom|end"
-                            android:background="@drawable/circle_shadow_background"
-                            android:padding="8dp" />
+                                android:layout_gravity="bottom|end"
+                                android:background="@drawable/circle_shadow_background"
+                                android:padding="8dp" />
                         </FrameLayout>
 
                         <!-- Name and Edit Icon Row -->
@@ -82,7 +82,7 @@
                                 android:id="@+id/profileName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="James Parker"
+                                android:text="@string/profile_name"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="@android:color/white" />
@@ -103,7 +103,7 @@
                             android:id="@+id/jobTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="UI/UX Designer"
+                            android:text="@string/job_title"
                             android:textSize="13sp"
                             android:textColor="@android:color/white"
                             android:layout_marginBottom="8dp" />
@@ -114,7 +114,7 @@
                             android:gravity="center"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Faculty of Mechanical Engineering, University of California"
+                            android:text="@string/faculty_text"
                             android:textSize="13sp"
                             android:textColor="@android:color/white"
                             android:layout_marginBottom="6dp" />
@@ -132,7 +132,7 @@
                                 android:id="@+id/addressText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Berkeley, United States"
+                                android:text="@string/address_text"
                                 android:textSize="13sp"
                                 android:textColor="@android:color/white" />
 
@@ -141,7 +141,7 @@
                                 android:id="@+id/contactInfoButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Contact Info"
+                                android:text="@string/contact_info"
                                 android:textSize="13sp"
                                 android:textColor="@android:color/white"
                                 android:layout_marginStart="8dp"
@@ -151,6 +151,7 @@
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
                 <!-- Horizontal Line -->
                 <View
                     android:id="@+id/horizontalLine1"
@@ -167,7 +168,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="My Files"
+                    android:text="@string/my_files"
                     android:textColor="#000000"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -200,21 +201,16 @@
                             android:focusable="true"
                             android:onClick="onCvClick">
 
-
                             <!-- CV Name -->
-
-
                             <TextView
                                 android:id="@+id/cvName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="2dp"
                                 android:gravity="start"
-                                android:text=" CV   "
+                                android:text="@string/cv"
                                 android:textColor="@android:color/black"
                                 android:textSize="14sp" />
-
-
 
                             <!-- CV Status Text -->
                             <TextView
@@ -227,6 +223,8 @@
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:textColor="@color/primaryColor" />
+
+                            <!-- Upload Icon -->
                             <ImageView
                                 android:id="@+id/cvUploadIcon"
                                 android:layout_width="24dp"
@@ -239,59 +237,7 @@
                                 android:onClick="onUploadCvClick" />
                         </LinearLayout>
 
-                        <!-- Portfolio Box -->
-                        <LinearLayout
-                            android:id="@+id/portfolioBox"
-                            android:layout_width="wrap_content"
-                            android:layout_height="80dp"
-                            android:orientation="horizontal"
-                            android:padding="8dp"
-                            android:background="@drawable/box_background"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="center_vertical"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:onClick="onPortfolioClick">
 
-
-
-                            <!-- Portfolio Name -->
-                            <TextView
-                                android:id="@+id/portfolioName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" Portfolio"
-                                android:textSize="14sp"
-                                android:textColor="@android:color/black"
-                                android:gravity="start"
-                                android:layout_marginEnd="8dp" />
-
-
-
-                            <!-- Portfolio Status Text -->
-                            <TextView
-                                android:id="@+id/portfolioStatusText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=""
-                                android:textSize="16sp"
-                                android:padding="8dp"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:textColor="@color/primaryColor" />
-                            <!-- Upload/Edit Icon -->
-                            <ImageView
-                                android:id="@+id/portfolioUploadIcon"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/baseline_upload_file_24"
-                                android:scaleType="centerCrop"
-                                android:contentDescription="Upload Icon"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:onClick="onUploadPortfolioClick" />
-
-                        </LinearLayout>
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -317,7 +263,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Saved Jobs"
+                        android:text="@string/saved_jobs"
                         android:textSize="20dp"
                         android:textStyle="bold" />
 
@@ -327,7 +273,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="See More"
+                        android:text="@string/see_more"
                         android:textSize="14sp"
                         android:textColor="@color/primaryColor"
                         android:gravity="end"
@@ -367,28 +313,28 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Android Developer"
+                                    android:text="@string/android_developer"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="ROBUSTA"
+                                    android:text="@string/robusta"
                                     android:textSize="14sp"
                                     android:layout_marginTop="8dp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Alexandria, Egypt (Remote)"
+                                    android:text="@string/location_remote"
                                     android:textSize="12sp"
                                     android:layout_marginTop="8dp" />
 
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Apply"
+                                    android:text="@string/apply"
                                     app:cardCornerRadius="8dp"
                                     android:layout_marginTop="16dp"
                                     android:backgroundTint="@color/primaryColor"
@@ -413,28 +359,28 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Android Developer"
+                                    android:text="@string/android_developer"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="ROBUSTA"
+                                    android:text="@string/robusta"
                                     android:textSize="14sp"
                                     android:layout_marginTop="8dp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Alexandria, Egypt (Remote)"
+                                    android:text="@string/location_remote"
                                     android:textSize="12sp"
                                     android:layout_marginTop="8dp" />
 
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Apply"
+                                    android:text="@string/apply"
                                     app:cardCornerRadius="8dp"
                                     android:layout_marginTop="16dp"
                                     android:backgroundTint="@color/primaryColor"
@@ -466,7 +412,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Track Applications Status"
+                        android:text="@string/track_applications_status"
                         android:textSize="20dp"
                         android:textStyle="bold" />
 
@@ -476,7 +422,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="See More"
+                        android:text="@string/see_more"
                         android:textSize="14sp"
                         android:textColor="@color/primaryColor"
                         android:gravity="end"
@@ -514,28 +460,28 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Android Developer"
+                                    android:text="@string/profile_name"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="ROBUSTA"
+                                    android:text="@string/robusta"
                                     android:textSize="14sp"
                                     android:layout_marginTop="8dp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Alexandria, Egypt (Remote)"
+                                    android:text="@string/location_remote"
                                     android:textSize="12sp"
                                     android:layout_marginTop="8dp" />
 
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Under evaluation"
+                                    android:text="@string/under_evaluation"
                                     android:layout_marginTop="16dp"
                                     app:cardCornerRadius="8dp"
                                     android:backgroundTint="@color/primaryColor"
@@ -560,28 +506,28 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Android Developer"
+                                    android:text="@string/android_developer"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="ROBUSTA"
+                                    android:text="@string/robusta"
                                     android:textSize="14sp"
                                     android:layout_marginTop="8dp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Alexandria, Egypt (Remote)"
+                                    android:text="@string/location_remote"
                                     android:textSize="12sp"
                                     android:layout_marginTop="8dp" />
 
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Refuse"
+                                    android:text="@string/refuse"
                                     android:layout_marginTop="16dp"
                                     android:backgroundTint="#C20A0A"
                                     app:cardCornerRadius="8dp"
