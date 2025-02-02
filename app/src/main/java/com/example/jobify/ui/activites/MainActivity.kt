@@ -24,15 +24,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.hide()
 
-        // Initialize Firebase
         FirebaseApp.initializeApp(this)
 
-        // Initialize Navigation
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment_main) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_menu)
         bottomNav.setupWithNavController(navController)
 
         // Handle Bottom Navigation Item Selection
