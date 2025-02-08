@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -6,23 +5,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <!-- ScrollView to make the content scrollable -->
+        <!--  ScrollView to make the content scrollable  -->
         <ScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:padding="9dp"
             app:layout_constraintBottom_toTopOf="@id/bottom_menu"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:padding="9dp">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <!-- CardView -->
+                <!--  CardView  -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView"
                     android:layout_width="match_parent"
@@ -30,138 +27,124 @@
                     android:layout_margin="1dp"
                     app:cardCornerRadius="50dp"
                     app:cardElevation="9dp">
-
-                    <!-- Add your content inside the CardView -->
+                    <!--  Add your content inside the CardView  -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/card"
+                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="1dp"
-                        android:background="@drawable/card_style"
-                        android:gravity="center">
-
-                        <!-- Image with Camera Icon -->
+                        android:padding="1dp">
+                        <!--  Image with Camera Icon  -->
                         <FrameLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
-                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent">
-
-                            <!-- Profile Image -->
+                            app:layout_constraintTop_toTopOf="parent">
+                            <!--  Profile Image  -->
                             <de.hdodenhof.circleimageview.CircleImageView
                                 android:id="@+id/profileImage"
                                 android:layout_width="150dp"
                                 android:layout_height="150dp"
                                 android:src="@drawable/profile"
-                                app:civ_border_width="2dp"
-                                app:civ_border_color="@android:color/white" />
-
-                            <!-- Camera Icon -->
+                                app:civ_border_color="@android:color/white"
+                                app:civ_border_width="2dp" />
+                            <!--  Camera Icon  -->
                             <ImageView
                                 android:id="@+id/cameraIcon"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:src="@drawable/baseline_camera_alt_24"
                                 android:layout_gravity="bottom|end"
                                 android:background="@drawable/circle_shadow_background"
-                                android:padding="8dp" />
+                                android:padding="8dp"
+                                android:src="@drawable/baseline_camera_alt_24" />
                         </FrameLayout>
-
-                        <!-- Name and Edit Icon Row -->
+                        <!--  Name and Edit Icon Row  -->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp"
                             android:gravity="center"
-                            android:layout_marginBottom="8dp">
-
-                            <!-- Name -->
+                            android:orientation="horizontal">
+                            <!--  Name  -->
                             <TextView
                                 android:id="@+id/profileName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/profile_name"
+                                android:textColor="@android:color/white"
                                 android:textSize="20sp"
-                                android:textStyle="bold"
-                                android:textColor="@android:color/white" />
-
-                            <!-- Edit Icon -->
+                                android:textStyle="bold" />
+                            <!--  Edit Icon  -->
                             <ImageView
                                 android:id="@+id/editIcon"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/baseline_edit_square_24"
                                 android:layout_marginStart="8dp"
                                 android:clickable="true"
-                                android:focusable="true" />
+                                android:focusable="true"
+                                android:src="@drawable/baseline_edit_square_24" />
                         </LinearLayout>
-
-                        <!-- Job Title -->
+                        <!--  Job Title  -->
                         <TextView
                             android:id="@+id/jobTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
                             android:text="@string/job_title"
-                            android:textSize="13sp"
                             android:textColor="@android:color/white"
-                            android:layout_marginBottom="8dp" />
-
-                        <!-- Faculty and University -->
+                            android:textSize="13sp" />
+                        <!--  Faculty and University  -->
                         <TextView
                             android:id="@+id/facultyText"
-                            android:gravity="center"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:gravity="center"
                             android:text="@string/faculty_text"
-                            android:textSize="13sp"
                             android:textColor="@android:color/white"
-                            android:layout_marginBottom="6dp" />
-
-                        <!-- Address and Contact Info Row -->
+                            android:textSize="13sp" />
+                        <!--  Address and Contact Info Row  -->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
+                            android:layout_marginBottom="1dp"
                             android:gravity="center"
-                            android:layout_marginBottom="1dp">
-
-                            <!-- Address -->
+                            android:orientation="horizontal">
+                            <!--  Address  -->
                             <TextView
                                 android:id="@+id/addressText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/address_text"
-                                android:textSize="13sp"
-                                android:textColor="@android:color/white" />
-
-                            <!-- Contact Info (Clickable Text) -->
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp" />
+                            <!--  Contact Info (Clickable Text)  -->
                             <TextView
                                 android:id="@+id/contactInfoButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/contact_info"
-                                android:textSize="13sp"
-                                android:textColor="@android:color/white"
                                 android:layout_marginStart="8dp"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:onClick="onContactInfoClick" />
+                                android:onClick="onContactInfoClick"
+                                android:text="@string/contact_info"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
-
-                <!-- Horizontal Line -->
+                <!--  Horizontal Line  -->
                 <View
                     android:id="@+id/horizontalLine1"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#57000000"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginHorizontal="16dp" />
-
-                <!-- TextView: My Files -->
+                    android:background="#57000000" />
+                <!--  TextView: My Files  -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -172,8 +155,7 @@
                     android:textColor="#000000"
                     android:textSize="20dp"
                     android:textStyle="bold" />
-
-                <!-- Horizontal ScrollView for CV/Portfolio -->
+                <!--  Horizontal ScrollView for CV/Portfolio  -->
                 <HorizontalScrollView
                     android:id="@+id/horizontalScrollView"
                     android:layout_width="match_parent"
@@ -186,22 +168,20 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="8dp">
-
-                        <!-- CV Box -->
+                        <!--  CV Box  -->
                         <LinearLayout
                             android:id="@+id/cvBox"
                             android:layout_width="wrap_content"
                             android:layout_height="80dp"
-                            android:orientation="horizontal"
-                            android:padding="8dp"
-                            android:background="@drawable/box_background"
                             android:layout_marginEnd="16dp"
-                            android:gravity="center_vertical"
+                            android:background="@drawable/box_background"
                             android:clickable="true"
                             android:focusable="true"
-                            android:onClick="onCvClick">
-
-                            <!-- CV Name -->
+                            android:gravity="center_vertical"
+                            android:onClick="onCvClick"
+                            android:orientation="horizontal"
+                            android:padding="8dp">
+                            <!--  CV Name  -->
                             <TextView
                                 android:id="@+id/cvName"
                                 android:layout_width="wrap_content"
@@ -211,54 +191,48 @@
                                 android:text="@string/cv"
                                 android:textColor="@android:color/black"
                                 android:textSize="14sp" />
-
-                            <!-- CV Status Text -->
+                            <!--  CV Status Text  -->
                             <TextView
                                 android:id="@+id/cvStatusText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=""
-                                android:textSize="16sp"
-                                android:padding="8dp"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:textColor="@color/primaryColor" />
-
-                            <!-- Upload Icon -->
+                                android:padding="8dp"
+                                android:text=""
+                                android:textColor="@color/primaryColor"
+                                android:textSize="16sp" />
+                            <!--  Upload Icon  -->
                             <ImageView
                                 android:id="@+id/cvUploadIcon"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/baseline_upload_file_24"
-                                android:scaleType="centerCrop"
-                                android:contentDescription="Upload Icon"
                                 android:clickable="true"
+                                android:contentDescription="Upload Icon"
                                 android:focusable="true"
-                                android:onClick="onUploadCvClick" />
+                                android:onClick="onUploadCvClick"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/baseline_upload_file_24" />
                         </LinearLayout>
-
-
                     </LinearLayout>
                 </HorizontalScrollView>
-
-                <!-- Horizontal Line -->
+                <!--  Horizontal Line  -->
                 <View
                     android:id="@+id/horizontalLine"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#57000000"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginHorizontal="16dp" />
-
-                <!-- TextView: Saved Jobs -->
+                    android:background="#57000000" />
+                <!--  TextView: Saved Jobs  -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -266,23 +240,21 @@
                         android:text="@string/saved_jobs"
                         android:textSize="20dp"
                         android:textStyle="bold" />
-
-                    <!-- "See More" Button -->
+                    <!--  "See More" Button  -->
                     <TextView
                         android:id="@+id/seeMoreSavedJobs"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/see_more"
-                        android:textSize="14sp"
-                        android:textColor="@color/primaryColor"
-                        android:gravity="end"
                         android:clickable="true"
                         android:focusable="true"
-                        android:onClick="onSeeMoreSavedJobsClick" />
+                        android:gravity="end"
+                        android:onClick="onSeeMoreSavedJobsClick"
+                        android:text="@string/see_more"
+                        android:textColor="@color/primaryColor"
+                        android:textSize="14sp" />
                 </LinearLayout>
-
-                <!-- Horizontal ScrollView for Saved Jobs -->
+                <!--  Horizontal ScrollView for Saved Jobs  -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -293,22 +265,21 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="8dp">
-
-                        <!-- Saved Job 1 -->
+                        <!--  Saved Job 1  -->
                         <androidx.cardview.widget.CardView
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
+                            android:background="@drawable/card"
                             app:cardCornerRadius="8dp"
-                            app:cardElevation="4dp"
-                            android:background="@drawable/card_style">
+                            app:cardElevation="4dp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:background="@android:color/white"
                                 android:orientation="vertical"
-                                android:padding="16dp"
-                                android:background="@android:color/white">
+                                android:padding="16dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -320,29 +291,28 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/robusta"
-                                    android:textSize="14sp"
-                                    android:layout_marginTop="8dp" />
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/location_remote"
-                                    android:textSize="12sp"
-                                    android:layout_marginTop="8dp" />
+                                    android:textSize="12sp" />
 
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/apply"
-                                    app:cardCornerRadius="8dp"
                                     android:layout_marginTop="16dp"
                                     android:backgroundTint="@color/primaryColor"
-                                    android:textColor="@android:color/white" />
+                                    android:text="@string/apply"
+                                    android:textColor="@android:color/white"
+                                    app:cardCornerRadius="8dp" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
-
-                        <!-- Saved Job 2 -->
+                        <!--  Saved Job 2  -->
                         <androidx.cardview.widget.CardView
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
@@ -366,48 +336,46 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/robusta"
-                                    android:textSize="14sp"
-                                    android:layout_marginTop="8dp" />
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/location_remote"
-                                    android:textSize="12sp"
-                                    android:layout_marginTop="8dp" />
+                                    android:textSize="12sp" />
 
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/apply"
-                                    app:cardCornerRadius="8dp"
                                     android:layout_marginTop="16dp"
                                     android:backgroundTint="@color/primaryColor"
-                                    android:textColor="@android:color/white" />
+                                    android:text="@string/apply"
+                                    android:textColor="@android:color/white"
+                                    app:cardCornerRadius="8dp" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
                     </LinearLayout>
                 </HorizontalScrollView>
-
-                <!-- Horizontal Line -->
+                <!--  Horizontal Line  -->
                 <View
                     android:id="@+id/horizontalLine3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#57000000"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginHorizontal="16dp" />
-
-                <!-- TextView: Track Applications Status -->
+                    android:background="#57000000" />
+                <!--  TextView: Track Applications Status  -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -415,23 +383,21 @@
                         android:text="@string/track_applications_status"
                         android:textSize="20dp"
                         android:textStyle="bold" />
-
-                    <!-- "See More" Button -->
+                    <!--  "See More" Button  -->
                     <TextView
                         android:id="@+id/seeMoreTrackApplications"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/see_more"
-                        android:textSize="14sp"
-                        android:textColor="@color/primaryColor"
-                        android:gravity="end"
                         android:clickable="true"
                         android:focusable="true"
-                        android:onClick="onSeeMoreTrackApplicationsClick" />
+                        android:gravity="end"
+                        android:onClick="onSeeMoreTrackApplicationsClick"
+                        android:text="@string/see_more"
+                        android:textColor="@color/primaryColor"
+                        android:textSize="14sp" />
                 </LinearLayout>
-
-                <!-- Horizontal ScrollView for Track Applications Status -->
+                <!--  Horizontal ScrollView for Track Applications Status  -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -442,8 +408,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="8dp">
-
-                        <!-- Track Job 1 -->
+                        <!--  Track Job 1  -->
                         <androidx.cardview.widget.CardView
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
@@ -467,29 +432,28 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/robusta"
-                                    android:textSize="14sp"
-                                    android:layout_marginTop="8dp" />
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/location_remote"
-                                    android:textSize="12sp"
-                                    android:layout_marginTop="8dp" />
+                                    android:textSize="12sp" />
 
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/under_evaluation"
                                     android:layout_marginTop="16dp"
-                                    app:cardCornerRadius="8dp"
                                     android:backgroundTint="@color/primaryColor"
-                                    android:textColor="@android:color/white" />
+                                    android:text="@string/under_evaluation"
+                                    android:textColor="@android:color/white"
+                                    app:cardCornerRadius="8dp" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
-
-                        <!-- Track Job 2 -->
+                        <!--  Track Job 2  -->
                         <androidx.cardview.widget.CardView
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
@@ -513,52 +477,50 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/robusta"
-                                    android:textSize="14sp"
-                                    android:layout_marginTop="8dp" />
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/location_remote"
-                                    android:textSize="12sp"
-                                    android:layout_marginTop="8dp" />
+                                    android:textSize="12sp" />
 
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/refuse"
                                     android:layout_marginTop="16dp"
                                     android:backgroundTint="#C20A0A"
-                                    app:cardCornerRadius="8dp"
-                                    android:textColor="@android:color/white" />
+                                    android:text="@string/refuse"
+                                    android:textColor="@android:color/white"
+                                    app:cardCornerRadius="8dp" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
                     </LinearLayout>
                 </HorizontalScrollView>
             </LinearLayout>
         </ScrollView>
-
-        <!-- FrameLayout for Fragments -->
+        <!--  FrameLayout for Fragments  -->
         <FrameLayout
+            android:id="@+id/frameContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/frameContainer"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/bottom_menu" />
-
-        <!-- BottomNavigationView -->
+            app:layout_constraintBottom_toTopOf="@id/bottom_menu"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!--  BottomNavigationView  -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_menu"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:background="#0554A1"
-            app:menu="@menu/bottom_menu"
             app:itemIconTint="@color/bottom_nav_item_colors"
             app:itemTextColor="@color/bottom_nav_item_colors"
             app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:menu="@menu/bottom_menu" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

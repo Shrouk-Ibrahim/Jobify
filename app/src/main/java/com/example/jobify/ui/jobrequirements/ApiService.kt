@@ -10,4 +10,5 @@ interface ApiService {
         @Query("page") page: Int = 1, // Pagination support
         @Query("limit") limit: Int = 10 // Limit results per page
     ): Call<ApiResponse>
+
 }

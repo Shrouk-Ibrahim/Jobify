@@ -32,7 +32,7 @@ class JobViewModel : ViewModel() {
 
         val jobNames = if (!query.isNullOrEmpty()) listOf(query) else null
 
-        RetrofitClient.instance.searchJobs(
+        FreelancerRetrofitClient.instance.searchJobs(
             jobNames = jobNames,
             categories = categories,
             page = page,
