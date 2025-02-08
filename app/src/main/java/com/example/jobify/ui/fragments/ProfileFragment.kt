@@ -68,16 +68,7 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
             showContactInfo()
         }
 
-        binding.cvUploadIcon.setOnClickListener {
-            uploadFile("cv")
-        }
 
-
-
-        // Set click listeners for CV and Portfolio status text
-        binding.cvStatusText.setOnClickListener {
-            showFile("cv")
-        }
 
 
     }
@@ -229,15 +220,7 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
                                 .into(binding.profileImage)
                         }
 
-                        // Update CV status
-                        val cvBase64 = document.getString("cvBase64")
-                        if (!cvBase64.isNullOrEmpty()) {
-                            binding.cvStatusText.text = "click to show"
-                        } else {
-                            binding.cvStatusText.text = ""
-                        }
 
-                        // Update Portfolio status
                     }
                 }
             }

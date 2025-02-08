@@ -15,9 +15,19 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.jobify.databinding.FragmentHomeBinding
 import com.google.android.material.snackbar.Snackbar
+
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
+import com.example.jobify.R
+
+import com.google.firebase.auth.FirebaseAuth
+import android.util.Base64
+import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeFragment : Fragment() {
 
@@ -25,6 +35,9 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: JobViewModel
     private lateinit var jobAdapter: JobAdapter
     private val categories = mutableListOf<Category>()
+    private lateinit var db: FirebaseFirestore
+    private val userId: String
+        get() = FirebaseAuth.getInstance().currentUser?.uid ?: throw IllegalStateException("User not logged in")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +50,46 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        db = FirebaseFirestore.getInstance()
+
         setupViewModel()
         setupRecyclerView()
         setupObservers()
         setupSearch()
         setupFilter()
         viewModel.fetchJobs()
+
+        // Fetch user data to load profile photo
+        fetchUserProfilePhoto()
+
+        // Set up the click listener for the profile photo
+        binding.profilePhoto.setOnClickListener {
+            // Navigate to ProfileFragment
+            findNavController().navigate(R.id.profileFragment)
+        }
+    }
+
+    private fun fetchUserProfilePhoto() {
+        db.collection("users").document(userId)
+            .addSnapshotListener { document, error ->
+                if (document != null && document.exists()) {
+                    // Load profile image from Base64 string
+                    val profileImageBase64 = document.getString("profileImageBase64")
+                    if (!profileImageBase64.isNullOrEmpty()) {
+                        val imageBytes = Base64.decode(profileImageBase64, Base64.DEFAULT)
+                        Glide.with(requireContext())
+                            .load(imageBytes)
+                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                            .into(binding.profilePhoto)
+                    } else {
+                        // Set a default image if no Base64 string is found
+                        Glide.with(requireContext())
+                            .load(R.drawable.baseline_account_circle_24) // Default profile icon
+                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                            .into(binding.profilePhoto)
+                    }
+                }
+            }
     }
 
     private fun setupViewModel() {

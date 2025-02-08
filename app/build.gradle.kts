@@ -50,6 +50,7 @@ dependencies {
     implementation ("androidx.core:core-ktx:1.10.1")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation("org.chromium.net:cronet-embedded:119.6045.31")
+    implementation("com.google.firebase:firebase-crashlytics-buildtools:3.0.3")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     // Import the BoM for the Firebase platform
