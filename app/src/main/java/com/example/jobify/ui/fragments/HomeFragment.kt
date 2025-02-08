@@ -15,9 +15,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.jobify.databinding.FragmentHomeBinding
-
 import com.google.android.material.snackbar.Snackbar
 
 class HomeFragment : Fragment() {
@@ -51,9 +50,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        val displayMetrics = resources.displayMetrics
+        val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
+        val columnCount = (screenWidthDp / 180).toInt() // Adjust 180dp to your preferred item width
         jobAdapter = JobAdapter(emptyList())
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            // Use GridLayoutManager with 2 columns
+            layoutManager = GridLayoutManager(requireContext(), columnCount)
             adapter = jobAdapter
         }
     }
