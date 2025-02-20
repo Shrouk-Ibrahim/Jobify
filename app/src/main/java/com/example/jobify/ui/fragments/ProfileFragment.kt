@@ -1,7 +1,8 @@
 package com.example.jobify.ui.fragments
 
+import Category
+import Job
 import android.app.Activity.RESULT_OK
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,36 +12,51 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.FileProvider
+import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.jobify.R
 import com.example.jobify.databinding.FragmentProfileBinding
+import com.example.jobify.ui.jobrequirements.SavedJobHorizontalAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.io.File
 
 class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogListener {
-
+    private lateinit var savedJobAdapter: SavedJobHorizontalAdapter
     private lateinit var binding: FragmentProfileBinding
     private lateinit var db: FirebaseFirestore
-    private val userId: String
-        get() = FirebaseAuth.getInstance().currentUser?.uid ?: throw IllegalStateException("User not logged in")
 
-    // Add a variable to store the upload type
-    private var currentUploadType: String? = null
+    private val userId: String
+        get() = FirebaseAuth.getInstance().currentUser?.uid ?: run {
+            Log.e("ProfileFragment", "User is not logged in")
+            throw IllegalStateException("User not logged in")
+        }
+
+    private val pickImageLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { imageUri: Uri? ->
+        if (imageUri != null) {
+            uploadProfileImage(imageUri)
+        } else {
+            Log.e("ProfileFragment", "Selected image URI is null")
+            Toast.makeText(requireContext(), "Error: No image selected", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     companion object {
         private const val PICK_PDF_REQUEST = 1001
-        private const val PICK_IMAGE_REQUEST = 1002
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -48,12 +64,17 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize Firestore and adapter
         db = FirebaseFirestore.getInstance()
+        savedJobAdapter = SavedJobHorizontalAdapter(emptyList())
 
-        // Fetch user data from Firestore
+        // Set up RecyclerView
+        binding.savedJobsRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.savedJobsRecyclerView.adapter = savedJobAdapter
+
+        // Fetch user data
         fetchUserData()
-
-        // Set up click listeners
         binding.editIcon.setOnClickListener {
             val dialog = EditProfileDialogFragment()
             dialog.setListener(this)
@@ -61,52 +82,139 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
         }
 
         binding.cameraIcon.setOnClickListener {
-            openImagePicker()
+            pickImageLauncher.launch("image/*")
         }
 
         binding.contactInfoButton.setOnClickListener {
             showContactInfo()
         }
 
-
-
-
-    }
-
-    private fun openImagePicker() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "image/*"
+        // Handle back button press
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (childFragmentManager.backStackEntryCount > 0) {
+                childFragmentManager.popBackStack()
+            } else {
+                binding.profileScrollView.visibility = View.VISIBLE
+                binding.frameContainer.visibility = View.GONE
+            }
         }
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
-    }
 
-    private fun uploadProfileImage(imageUri: Uri) {
-        val base64Image = convertImageToBase64(imageUri)
-        if (base64Image != null) {
-            db.collection("users").document(userId)
-                .update("profileImageBase64", base64Image)
-                .addOnSuccessListener {
-                    if (isAdded && !isDetached) {
-                        Toast.makeText(requireContext(), "Profile image updated", Toast.LENGTH_SHORT).show()
-                        // Load the image from the Base64 string
-                        val imageBytes = Base64.decode(base64Image, Base64.DEFAULT)
+        binding.seeMoreSavedJobs.setOnClickListener {
+            binding.profileScrollView.visibility = View.GONE
+            binding.frameContainer.visibility = View.VISIBLE
+
+            val savedJobsFragment = SavedJobsFragment()
+            childFragmentManager.beginTransaction()
+                .replace(R.id.frameContainer, savedJobsFragment)
+                .addToBackStack("profile_to_saved")
+                .commit()
+        }
+        // Handle back button press to show ScrollView again
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            binding.profileScrollView.visibility = View.VISIBLE
+            binding.frameContainer.visibility = View.GONE
+            if (childFragmentManager.backStackEntryCount > 0) {
+                childFragmentManager.popBackStack()
+            } else {
+                requireActivity().finish()
+            }
+        }
+
+        // Handle "See More" button click
+        // In ProfileFragment.kt
+        binding.seeMoreSavedJobs.setOnClickListener {
+            Log.d("ProfileFragment", "See More button clicked")
+            try {
+                // Hide ScrollView and show FrameContainer
+                binding.profileScrollView.visibility = View.GONE
+                binding.frameContainer.visibility = View.VISIBLE
+
+                // Replace the frameContainer with SavedJobsFragment
+                val savedJobsFragment = SavedJobsFragment()
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.frameContainer, savedJobsFragment)
+                    .addToBackStack("profile_to_saved")
+                    .commit()
+                Log.d("ProfileFragment", "FragmentTransaction committed successfully")
+            } catch (e: Exception) {
+                Log.e("ProfileFragment", "Error during FragmentTransaction", e)
+            }
+        }
+    }
+    private fun fetchUserData() {
+        Log.d("ProfileFragment", "Fetching user data for userId: $userId")
+
+        db.collection("users").document(userId).collection("savedJobs")
+            .limit(3)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.e("ProfileFragment", "Error fetching saved jobs", error)
+                    return@addSnapshotListener
+                }
+
+                val jobs = value?.documents?.mapNotNull { doc ->
+                    try {
+                        val data = doc.data ?: throw IllegalStateException("Document data is null")
+                        val id = when (val idValue = data["id"]) {
+                            is String -> idValue
+                            is Long -> idValue.toString() // Convert Long to String
+                            else -> throw IllegalStateException("Invalid type for id: ${idValue?.javaClass}")
+                        }
+                        Job(
+                            id = id,
+                            name = data["name"] as? String ?: "",
+                            category = (data["category"] as? Map<*, *>)?.let {
+                                Category(
+                                    id = it["id"] as? String ?: "",
+                                    name = it["name"] as? String ?: ""
+                                )
+                            } ?: Category(),
+                            active_project_count = data["active_project_count"] as? Int,
+                            seo_url = data["seo_url"] as? String ?: "",
+                            seo_info = data["seo_info"] as? String ?: "",
+                            local = data["local"] as? Boolean ?: false,
+                            questions = data["questions"] as? List<String>,
+                            timestamp = data["timestamp"] as? com.google.firebase.Timestamp
+                        )
+                    } catch (e: Exception) {
+                        Log.e("ProfileFragment", "Error parsing document ${doc.id}: ${doc.data}", e)
+                        null
+                    }
+                } ?: emptyList()
+
+                savedJobAdapter.updateJobs(jobs)
+            }
+
+        db.collection("users").document(userId)
+            .addSnapshotListener { document, error ->
+                if (error != null) {
+                    Log.e("ProfileFragment", "Error fetching user data", error)
+                    return@addSnapshotListener
+                }
+
+                document?.let {
+                    Log.d("ProfileFragment", "User data retrieved: ${it.data}")
+                    binding.profileName.text = it.getString("name") ?: "No Name"
+                    binding.jobTitle.text = it.getString("jobTitle") ?: "No Job Title"
+                    binding.facultyText.text = it.getString("faculty") ?: "No Faculty"
+                    binding.addressText.text = it.getString("address") ?: "No Address"
+
+                    val profileImageBase64 = it.getString("profileImageBase64")
+                    if (!profileImageBase64.isNullOrEmpty()) {
+                        val imageBytes = Base64.decode(profileImageBase64, Base64.DEFAULT)
                         Glide.with(requireContext())
                             .load(imageBytes)
                             .apply(RequestOptions.bitmapTransform(CircleCrop()))
                             .into(binding.profileImage)
+                    } else {
+                        Glide.with(requireContext())
+                            .load(R.drawable.profile)
+                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                            .into(binding.profileImage)
                     }
                 }
-                .addOnFailureListener { exception ->
-                    if (isAdded && !isDetached) {
-                        Toast.makeText(requireContext(), "Error updating Firestore", Toast.LENGTH_SHORT).show()
-                        Log.e("ProfileFragment", "Error updating Firestore", exception)
-                    }
-                }
-        } else {
-            Toast.makeText(requireContext(), "Error converting image", Toast.LENGTH_SHORT).show()
-        }
+            }
     }
-
     private fun convertImageToBase64(imageUri: Uri): String? {
         return try {
             val inputStream = requireContext().contentResolver.openInputStream(imageUri)
@@ -117,116 +225,30 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
             null
         }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && data != null) {
-            when (requestCode) {
-                PICK_IMAGE_REQUEST -> {
-                    val imageUri = data.data
-                    if (imageUri != null) {
-                        uploadProfileImage(imageUri)
-                    } else {
-                        Log.e("ProfileFragment", "Selected image URI is null")
-                        Toast.makeText(requireContext(), "Error: No image selected", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                PICK_PDF_REQUEST -> {
-                    val fileUri = data.data
-                    // Use the class-level variable to get the upload type
-                    val uploadType = currentUploadType
-                    if (fileUri != null && uploadType != null) {
-                        uploadFileToFirestore(fileUri, uploadType)
-                    } else {
-                        Toast.makeText(requireContext(), "Error: No file selected or upload type not set", Toast.LENGTH_SHORT).show()
-                        Log.e("ProfileFragment", "File URI: $fileUri, Upload Type: $uploadType")
-                    }
-                    // Reset the upload type after use
-                    currentUploadType = null
-                }
-            }
-        }
-    }
-
-    private fun uploadFileToFirestore(fileUri: Uri, uploadType: String) {
-        Log.d("ProfileFragment", "Starting file upload to Firestore: $uploadType")
-        val base64File = convertFileToBase64(fileUri)
-        if (base64File != null) {
-            Log.d("ProfileFragment", "File converted to Base64 successfully")
+    private fun uploadProfileImage(imageUri: Uri) {
+        val base64Image = convertImageToBase64(imageUri)
+        if (base64Image != null) {
             db.collection("users").document(userId)
-                .update("${uploadType}Base64", base64File)
+                .update("profileImageBase64", base64Image)
                 .addOnSuccessListener {
-                    if (isAdded && !isDetached) {
-                        Toast.makeText(requireContext(), "$uploadType uploaded", Toast.LENGTH_SHORT).show()
-                        Log.d("ProfileFragment", "$uploadType uploaded to Firestore")
-                        // Fetch user data again to update the UI
-                        fetchUserData()
-                    }
+                    Toast.makeText(requireContext(), "Profile image updated", Toast.LENGTH_SHORT).show()
+                    val imageBytes = Base64.decode(base64Image, Base64.DEFAULT)
+                    Glide.with(requireContext())
+                        .load(imageBytes)
+                        .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                        .into(binding.profileImage)
                 }
                 .addOnFailureListener { exception ->
-                    if (isAdded && !isDetached) {
-                        Toast.makeText(requireContext(), "Error updating Firestore", Toast.LENGTH_SHORT).show()
-                        Log.e("ProfileFragment", "Error updating Firestore", exception)
-                    }
+                    Toast.makeText(requireContext(), "Error updating Firestore", Toast.LENGTH_SHORT).show()
+                    Log.e("ProfileFragment", "Error updating Firestore", exception)
                 }
-        } else {
-            Log.e("ProfileFragment", "Error converting file to Base64")
-            Toast.makeText(requireContext(), "Error converting file to Base64", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun convertFileToBase64(fileUri: Uri): String? {
-        return try {
-            val inputStream = requireContext().contentResolver.openInputStream(fileUri)
-            val bytes = inputStream?.readBytes()
-            Base64.encodeToString(bytes, Base64.DEFAULT)
-        } catch (e: Exception) {
-            Log.e("ProfileFragment", "Error converting file to Base64", e)
-            null
         }
     }
 
     override fun onProfileUpdated() {
-        Log.d("ProfileFragment", "onProfileUpdated called")
         fetchUserData()
     }
 
-    private fun fetchUserData() {
-        Log.d("ProfileFragment", "Fetching user data")
-        db.collection("users").document(userId)
-            .addSnapshotListener { document, error ->
-                if (isAdded && !isDetached) {
-                    if (document != null && document.exists()) {
-                        Log.d("ProfileFragment", "User data retrieved: ${document.data}")
-                        // Update UI with Firestore data
-                        binding.profileName.text = document.getString("name") ?: "No Name"
-                        binding.jobTitle.text = document.getString("jobTitle") ?: "No Job Title"
-                        binding.facultyText.text = document.getString("faculty") ?: "No Faculty"
-                        binding.addressText.text = document.getString("address") ?: "No Address"
-
-                        // Load profile image from Base64 string
-                        val profileImageBase64 = document.getString("profileImageBase64")
-                        if (!profileImageBase64.isNullOrEmpty()) {
-                            val imageBytes = Base64.decode(profileImageBase64, Base64.DEFAULT)
-                            Glide.with(requireContext())
-                                .load(imageBytes)
-                                .apply(RequestOptions.bitmapTransform(CircleCrop()))
-                                .into(binding.profileImage)
-                        } else {
-                            // Set a default image if no Base64 string is found
-                            Glide.with(requireContext())
-                                .load(R.drawable.profile)
-                                .apply(RequestOptions.bitmapTransform(CircleCrop()))
-                                .into(binding.profileImage)
-                        }
-
-
-                    }
-                }
-            }
-    }
-
-    // In ProfileFragment.kt
 
     private fun showContactInfo() {
         val dialog = ContactInfoDialogFragment()
@@ -237,76 +259,6 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
             }
         })
         dialog.show(parentFragmentManager, "ContactInfoDialog")
-    }
-// In ProfileFragment.kt
 
-    fun onContactInfoClick(view: View) {
-        showContactInfo()
-    }
-    private fun uploadFile(type: String) {
-        Log.d("ProfileFragment", "Starting file upload with type: $type")
-        // Store the upload type in the class-level variable
-        currentUploadType = type
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            this.type = "application/pdf"
-        }
-        startActivityForResult(intent, PICK_PDF_REQUEST)
-    }
 
-    private fun showFile(type: String) {
-        db.collection("users").document(userId)
-            .get()
-            .addOnSuccessListener { document ->
-                if (isAdded && !isDetached) {
-                    if (document != null) {
-                        val fileBase64 = document.getString("${type}Base64")
-                        if (!fileBase64.isNullOrEmpty()) {
-                            // Decode the Base64 string to bytes
-                            val fileBytes = Base64.decode(fileBase64, Base64.DEFAULT)
-
-                            // Save the file to a temporary location
-                            val file = saveFileToCache(fileBytes, type)
-
-                            // Open the file using an appropriate app
-                            openFile(file)
-                        } else {
-                            Toast.makeText(requireContext(), "No $type file found", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
-            .addOnFailureListener { exception ->
-                if (isAdded && !isDetached) {
-                    Toast.makeText(requireContext(), "Error fetching $type file", Toast.LENGTH_SHORT).show()
-                    Log.e("ProfileFragment", "Error fetching $type file", exception)
-                }
-            }
-    }
-
-    private fun saveFileToCache(fileBytes: ByteArray, type: String): File {
-        // Create a temporary file in the cache directory
-        val fileName = "${type}_${System.currentTimeMillis()}.pdf"
-        val file = File(requireContext().cacheDir, fileName)
-        file.writeBytes(fileBytes)
-        return file
-    }
-
-    private fun openFile(file: File) {
-        // Create an intent to open the file
-        val intent = Intent(Intent.ACTION_VIEW)
-        val fileUri = FileProvider.getUriForFile(
-            requireContext(),
-            "${requireContext().packageName}.fileprovider",
-            file
-        )
-        intent.setDataAndType(fileUri, "application/pdf")
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-        // Start the activity to open the file
-        try {
-            startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), "No app found to open the file", Toast.LENGTH_SHORT).show()
-        }
-    }
-}
+}}

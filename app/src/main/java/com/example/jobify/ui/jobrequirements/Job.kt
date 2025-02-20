@@ -4,18 +4,23 @@ data class ApiResponse(
     val request_id: String? // Request ID (optional)
 )
 
-data class Job(
-    val id: Int, // Changed from String to Int
-    val name: String, // Changed from title to name
-    val category: Category,
-    val active_project_count: Int?,
-    val seo_url: String?,
-    val seo_info: String?,
-    val local: Boolean?,
-    val questions: List<String>? // Assuming questions is a list of strings
-)
 
+data class Job(
+    val id: String = "", // Keep as String
+    val name: String = "",
+    val category: Category = Category(),
+    val active_project_count: Int? = null,
+    val seo_url: String = "",
+    val seo_info: String = "",
+    val local: Boolean = false,
+    val questions: List<String>? = null,
+    val timestamp: com.google.firebase.Timestamp? = null
+){
+    constructor() : this("", "", Category()) // Required for Firestore
+}
+
+// Category.kt
 data class Category(
-    val id: Int,
-    val name: String
+    val id: String = "",
+    val name: String = ""
 )

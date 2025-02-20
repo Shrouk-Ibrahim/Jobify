@@ -2,13 +2,13 @@ package com.example.jobify.ui.fragments
 
 import Category
 import Job
-import JobAdapter
 import JobViewModel
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,23 +17,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.jobify.databinding.FragmentHomeBinding
-import com.google.android.material.snackbar.Snackbar
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.jobify.R
-
+import com.example.jobify.databinding.FragmentSavedJobsBinding
+import com.example.jobify.ui.jobrequirements.SavedJobHorizontalAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import android.util.Base64
 import com.google.firebase.firestore.FirebaseFirestore
 
-class HomeFragment : Fragment() {
-
-    private lateinit var binding: FragmentHomeBinding
+class SavedJobsFragment : Fragment() {
+    private lateinit var binding: FragmentSavedJobsBinding
     private lateinit var viewModel: JobViewModel
-    private lateinit var jobAdapter: JobAdapter
+    private lateinit var adapter: SavedJobHorizontalAdapter
     private val categories = mutableListOf<Category>()
     private lateinit var db: FirebaseFirestore
     private val userId: String
@@ -43,7 +40,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentSavedJobsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -57,7 +54,6 @@ class HomeFragment : Fragment() {
         setupObservers()
         setupSearch()
         setupFilter()
-        viewModel.fetchJobs()
 
         // Fetch user data to load profile photo
         fetchUserProfilePhoto()
@@ -67,6 +63,9 @@ class HomeFragment : Fragment() {
             // Navigate to ProfileFragment
             findNavController().navigate(R.id.profileFragment)
         }
+
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        userId?.let { viewModel.fetchSavedJobs(it) }
     }
 
     private fun fetchUserProfilePhoto() {
@@ -100,25 +99,18 @@ class HomeFragment : Fragment() {
         val displayMetrics = resources.displayMetrics
         val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
         val columnCount = (screenWidthDp / 180).toInt() // Adjust 180dp to your preferred item width
-        jobAdapter = JobAdapter(emptyList())
-        binding.recyclerView.apply {
-            // Use GridLayoutManager with 2 columns
+        adapter = SavedJobHorizontalAdapter(emptyList())
+        binding.savedJobsRecyclerView.apply {
             layoutManager = GridLayoutManager(requireContext(), columnCount)
-            adapter = jobAdapter
+            adapter = this@SavedJobsFragment.adapter
         }
     }
 
     private fun setupObservers() {
-        viewModel.jobs.observe(viewLifecycleOwner) { jobs ->
+        viewModel.savedJobs.observe(viewLifecycleOwner) { jobs ->
             jobs?.let {
-                jobAdapter.updateJobs(jobs)
+                adapter.updateJobs(jobs)
                 updateCategories(jobs)
-            }
-        }
-
-        viewModel.savedJobs.observe(viewLifecycleOwner) { savedJobs ->
-            savedJobs?.let {
-                jobAdapter.updateJobs(savedJobs) // Use savedJobs instead of jobs
             }
         }
 
@@ -132,6 +124,7 @@ class HomeFragment : Fragment() {
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
+
     private fun setupSearch() {
         binding.searchBar.addTextChangedListener(object : TextWatcher {
             private val handler = Handler(Looper.getMainLooper())
@@ -143,7 +136,7 @@ class HomeFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 runnable?.let { handler.removeCallbacks(it) }
                 runnable = Runnable {
-                    viewModel.fetchJobs(query = s?.toString())
+                    viewModel.fetchSavedJobs(userId, query = s?.toString())
                 }
                 handler.postDelayed(runnable!!, 500)
             }
@@ -169,15 +162,14 @@ class HomeFragment : Fragment() {
             .setMultiChoiceItems(categoryNames, checkedItems) { _, which, isChecked ->
                 checkedItems[which] = isChecked
             }
-
-                .setPositiveButton("Apply") { _, _ ->
+            .setPositiveButton("Apply") { _, _ ->
                 val selectedCategories = categories.filterIndexed { index, _ ->
                     checkedItems[index]
                 }.map { it.id } // Already returns String IDs
-                viewModel.fetchJobs(categories = selectedCategories)
+                viewModel.fetchSavedJobs(userId, categories = selectedCategories)
             }
             .setNegativeButton("Clear") { _, _ ->
-                viewModel.fetchJobs(categories = emptyList())
+                viewModel.fetchSavedJobs(userId, categories = emptyList())
             }
             .setNeutralButton("Cancel", null)
             .show()
