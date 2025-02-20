@@ -10,6 +10,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="9dp"
+            android:id="@+id/profileScrollView"
             app:layout_constraintBottom_toTopOf="@id/bottom_menu"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,6 +89,7 @@
                                 android:src="@drawable/baseline_edit_square_24" />
                         </LinearLayout>
                         <!--  Job Title  -->
+
                         <TextView
                             android:id="@+id/jobTitle"
                             android:layout_width="wrap_content"
@@ -137,14 +139,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!--  Horizontal Line  -->
-                <View
-                    android:id="@+id/horizontalLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="16dp"
-                    android:background="#57000000" />
                 <!--  TextView: Saved Jobs  -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -175,259 +169,27 @@
                         android:textColor="@color/primaryColor"
                         android:textSize="14sp" />
                 </LinearLayout>
-                <!--  Horizontal ScrollView for Saved Jobs  -->
-                <HorizontalScrollView
+
+                <!-- Horizontal RecyclerView for Saved Jobs -->
+                <!-- After Saved Jobs TextView -->
+                <!-- fragment_profile.xml -->
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/savedJobsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_job_horizontal" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="8dp">
-                        <!--  Saved Job 1  -->
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="16dp"
-                            android:background="@drawable/card"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="4dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@android:color/white"
-                                android:orientation="vertical"
-                                android:padding="16dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/android_developer"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/robusta"
-                                    android:textSize="14sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/location_remote"
-                                    android:textSize="12sp" />
-
-                                <Button
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="16dp"
-                                    android:backgroundTint="@color/primaryColor"
-                                    android:text="@string/apply"
-                                    android:textColor="@android:color/white"
-                                    app:cardCornerRadius="8dp" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-                        <!--  Saved Job 2  -->
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="16dp"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="4dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="16dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/android_developer"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/robusta"
-                                    android:textSize="14sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/location_remote"
-                                    android:textSize="12sp" />
-
-                                <Button
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="16dp"
-                                    android:backgroundTint="@color/primaryColor"
-                                    android:text="@string/apply"
-                                    android:textColor="@android:color/white"
-                                    app:cardCornerRadius="8dp" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-                    </LinearLayout>
-                </HorizontalScrollView>
-                <!--  Horizontal Line  -->
-                <View
-                    android:id="@+id/horizontalLine3"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="16dp"
-                    android:background="#57000000" />
-                <!--  TextView: Track Applications Status  -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/track_applications_status"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-                    <!--  "See More" Button  -->
-                    <TextView
-                        android:id="@+id/seeMoreTrackApplications"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="end"
-                        android:onClick="onSeeMoreTrackApplicationsClick"
-                        android:text="@string/see_more"
-                        android:textColor="@color/primaryColor"
-                        android:textSize="14sp" />
-                </LinearLayout>
-                <!--  Horizontal ScrollView for Track Applications Status  -->
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="8dp">
-                        <!--  Track Job 1  -->
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="16dp"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="4dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="16dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/profile_name"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/robusta"
-                                    android:textSize="14sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/location_remote"
-                                    android:textSize="12sp" />
-
-                                <Button
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="16dp"
-                                    android:backgroundTint="@color/primaryColor"
-                                    android:text="@string/under_evaluation"
-                                    android:textColor="@android:color/white"
-                                    app:cardCornerRadius="8dp" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-                        <!--  Track Job 2  -->
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="16dp"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="4dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="16dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/android_developer"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/robusta"
-                                    android:textSize="14sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/location_remote"
-                                    android:textSize="12sp" />
-
-                                <Button
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="16dp"
-                                    android:backgroundTint="#C20A0A"
-                                    android:text="@string/refuse"
-                                    android:textColor="@android:color/white"
-                                    app:cardCornerRadius="8dp" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-                    </LinearLayout>
-                </HorizontalScrollView>
             </LinearLayout>
         </ScrollView>
         <!--  FrameLayout for Fragments  -->
         <FrameLayout
             android:id="@+id/frameContainer"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@id/bottom_menu"
             app:layout_constraintTop_toTopOf="parent" />
         <!--  BottomNavigationView  -->

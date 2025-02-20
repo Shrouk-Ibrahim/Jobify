@@ -12,7 +12,7 @@ android {
     compileSdk = 35
     buildFeatures {
         dataBinding = true
-        viewBinding = true
+
     }
     defaultConfig {
         applicationId = "com.example.jobify"

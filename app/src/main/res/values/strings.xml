@@ -48,5 +48,7 @@
     <string name="job_title_hint">Enter your job title</string>
     <string name="faculty_hint">Enter your faculty</string>
     <string name="address_hint">Enter your address</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
