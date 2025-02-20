@@ -4,6 +4,7 @@ import Category
 import Job
 import JobAdapter
 import JobViewModel
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -27,6 +28,7 @@ import com.example.jobify.R
 
 import com.google.firebase.auth.FirebaseAuth
 import android.util.Base64
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeFragment : Fragment() {
@@ -187,4 +189,6 @@ class HomeFragment : Fragment() {
         categories.clear()
         categories.addAll(jobs.map { it.category }.distinctBy { it.id })
     }
+
+
 }

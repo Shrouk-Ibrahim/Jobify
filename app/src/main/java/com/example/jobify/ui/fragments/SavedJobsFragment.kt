@@ -3,6 +3,7 @@ package com.example.jobify.ui.fragments
 import Category
 import Job
 import JobViewModel
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
@@ -99,20 +101,29 @@ class SavedJobsFragment : Fragment() {
         val displayMetrics = resources.displayMetrics
         val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
         val columnCount = (screenWidthDp / 180).toInt() // Adjust 180dp to your preferred item width
+
         adapter = SavedJobHorizontalAdapter(emptyList())
+
         binding.savedJobsRecyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(), columnCount)
+            layoutManager = GridLayoutManager(requireContext(), columnCount).apply {
+                isSmoothScrollbarEnabled = true // Enables smooth scrolling
+            }
+            setHasFixedSize(true) // Improves performance
             adapter = this@SavedJobsFragment.adapter
+            addItemDecoration(SpacingItemDecoration(16)) // Adds spacing dynamically
         }
     }
+
 
     private fun setupObservers() {
         viewModel.savedJobs.observe(viewLifecycleOwner) { jobs ->
             jobs?.let {
                 adapter.updateJobs(jobs)
                 updateCategories(jobs)
+
             }
         }
+
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
             if (!error.isNullOrEmpty()) {
@@ -178,5 +189,12 @@ class SavedJobsFragment : Fragment() {
     private fun updateCategories(jobs: List<Job>) {
         categories.clear()
         categories.addAll(jobs.map { it.category }.distinctBy { it.id })
+    }
+}class SpacingItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        outRect.left = space
+        outRect.right = space
+        outRect.top = space
+        outRect.bottom = space
     }
 }
