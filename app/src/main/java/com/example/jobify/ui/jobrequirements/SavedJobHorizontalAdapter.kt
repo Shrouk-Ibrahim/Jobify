@@ -1,21 +1,24 @@
 package com.example.jobify.ui.jobrequirements
 
-import Job
+import Project
 import UnsplashResponse
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.jobify.R
+import com.example.jobify.ui.fragments.JobDetailsFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SavedJobHorizontalAdapter(private var jobs: List<Job>) :
+class SavedJobHorizontalAdapter(private var projects: List<Project>, private val navController: NavController) :
     RecyclerView.Adapter<SavedJobHorizontalAdapter.JobViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JobViewHolder {
@@ -25,11 +28,19 @@ class SavedJobHorizontalAdapter(private var jobs: List<Job>) :
     }
 
     override fun onBindViewHolder(holder: JobViewHolder, position: Int) {
-        val job = jobs[position]
-        holder.title.text = job.name
-        holder.description.text = job.category.name
+        val project = projects[position]
+        holder.title.text = project.title
+        holder.description.text = project.description
 
-        UnsplashRetrofitClient.instance.searchPhotos(job.category.name).enqueue(object :
+
+        holder.itemView.setOnClickListener {
+            val bundle = Bundle().apply {
+                putInt("projectId", project.id)
+            }
+            navController.navigate(R.id.action_to_jobDetailsFragment, bundle)
+        }
+
+        UnsplashRetrofitClient.instance.searchPhotos(project.title).enqueue(object :
             Callback<UnsplashResponse> {
             override fun onResponse(
                 call: Call<UnsplashResponse>,
@@ -54,10 +65,10 @@ class SavedJobHorizontalAdapter(private var jobs: List<Job>) :
     }
 
 
-        override fun getItemCount(): Int = jobs.size
+        override fun getItemCount(): Int = projects.size
 
-    fun updateJobs(newJobs: List<Job>) {
-        jobs = newJobs
+    fun updateJobs(newJobs: List<Project>) {
+        projects = newJobs
         notifyDataSetChanged()
     }
 

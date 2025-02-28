@@ -18,9 +18,5 @@
         android:icon="@drawable/baseline_notifications_none_24" />
 
 
-    <!-- Add Language Switch Button -->
-    <item
-        android:id="@+id/languageSwitch"
-        android:title="Language"
-        android:icon="@drawable/baseline_language_24" />
+
 </menu>

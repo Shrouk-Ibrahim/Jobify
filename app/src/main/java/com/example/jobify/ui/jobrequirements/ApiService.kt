@@ -1,14 +1,15 @@
-import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("jobs/search/")
-    fun searchJobs(
-        @Query("job_names[]") jobNames: List<String>? = null, // Search by job names
-        @Query("categories[]") categories: List<Int>? = null, // Filter by categories
-        @Query("page") page: Int = 1, // Pagination support
-        @Query("limit") limit: Int = 10 // Limit results per page
-    ): Call<ApiResponse>
-
+    @GET("projects/{projectId}")
+    suspend fun getProjectDetails(@Path("projectId") projectId: Int): ProjectDetailsResponse
+    @GET("projects/")
+    suspend fun getProjects(
+        @Query("projects[]") projectIds: List<Int>? = null, // Corrected parameter name
+        @Query("sort_field") sortField: String? = "time_submitted",
+        @Query("sort_order") sortOrder: String? = "desc",
+        @Query("frontend_project_status[]") frontendProjectStatus: List<String>? = listOf("open")
+    ): ProjectResponse
 }
