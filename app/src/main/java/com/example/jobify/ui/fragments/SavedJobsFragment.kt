@@ -1,5 +1,12 @@
 package com.example.jobify.ui.fragments
 
+import android.graphics.Rect
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Base64
+import android.util.DisplayMetrics
+import android.util.Log
 import BidStats
 import Budget
 import Country
@@ -8,18 +15,12 @@ import Location
 import Project
 import Timezone
 import Upgrades
-import android.graphics.Rect
-import android.os.Bundle
-import android.util.Base64
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -53,38 +54,116 @@ class SavedJobsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize Firestore and adapter
         db = FirebaseFirestore.getInstance()
 
-        // Calculate the number of columns based on screen width
         val displayMetrics: DisplayMetrics = resources.displayMetrics
         val screenWidthDp: Float = displayMetrics.widthPixels / displayMetrics.density
-        val columnCount: Int = (screenWidthDp / 180).toInt() // Adjust 180dp to your preferred item width
-        val navController = findNavController()
-        // Initialize the adapter
-        savedJobAdapter = SavedJobHorizontalAdapter(emptyList(),navController)
+        val columnCount: Int = (screenWidthDp / 180).toInt()
 
-        // Set up RecyclerView with GridLayoutManager
+        savedJobAdapter = SavedJobHorizontalAdapter(emptyList(), findNavController())
+
         binding.savedJobsRecyclerView.apply {
             layoutManager = GridLayoutManager(requireContext(), columnCount).apply {
-                isSmoothScrollbarEnabled = true // Enables smooth scrolling
+                isSmoothScrollbarEnabled = true
             }
-            setHasFixedSize(true) // Improves performance
+            setHasFixedSize(true)
             adapter = savedJobAdapter
-            addItemDecoration(SpacingItemDecoration(16)) // Adds spacing dynamically
+            addItemDecoration(SpacingItemDecoration(16))
         }
 
-        // Fetch user data to load profile photo
+        setupSearchBar()
+
+        binding.filterIcon.setOnClickListener {
+            val filterDialog = FilterDialogFragment()
+            filterDialog.setListener(object : FilterDialogFragment.FilterDialogListener {
+                override fun onFilterApplied(minBudget: Double?, maxBudget: Double?) {
+                    applyFilters(minBudget, maxBudget)
+                }
+
+                override fun onResetFilters() {
+                    resetFilters()
+                }
+            })
+            filterDialog.show(parentFragmentManager, "FilterDialog")
+        }
+
         fetchUserProfilePhoto()
-
-        // Set up the click listener for the profile photo
-        binding.profilePhoto.setOnClickListener {
-            // Navigate to ProfileFragment
-            findNavController().navigate(R.id.profileFragment)
-        }
-
-        // Fetch saved jobs
         fetchSavedJobs()
+    }
+
+    private fun setupSearchBar() {
+        binding.searchBar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString().trim()
+                filterProjects(query)
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun filterProjects(query: String) {
+        val originalList = savedJobAdapter.getOriginalList()
+        val filteredProjects = if (query.isEmpty()) {
+            originalList // Return the original list if the query is empty
+        } else {
+            originalList.filter { project ->
+                // Check if the title or description contains the query (case-insensitive)
+                project.title?.contains(query, ignoreCase = true) == true ||
+                        project.description?.contains(query, ignoreCase = true) == true
+            }
+        }
+        savedJobAdapter.updateJobs(filteredProjects)
+    }
+
+    private fun applyFilters(minBudget: Double?, maxBudget: Double?) {
+        val originalList = savedJobAdapter.getOriginalList()
+        val filteredProjects = originalList.filter { project ->
+            // Filter by budget
+           when {
+                minBudget != null && maxBudget != null -> {
+                    // Both min and max are provided
+                    (project.budget?.minimum ?: 0.0) >= minBudget && (project.budget?.maximum ?: 0.0) <= maxBudget
+                }
+                minBudget != null -> {
+                    // Only min is provided
+                    (project.budget?.minimum ?: 0.0) >= minBudget
+                }
+                maxBudget != null -> {
+                    // Only max is provided
+                    (project.budget?.maximum ?: 0.0) <= maxBudget
+                }
+                else -> true // No budget filter applie
+            }
+        }
+        savedJobAdapter.updateJobs(filteredProjects)
+    }
+    private fun resetFilters() {
+        val originalList = savedJobAdapter.getOriginalList()
+        savedJobAdapter.updateJobs(originalList)
+    }
+
+    private fun fetchUserProfilePhoto() {
+        db.collection("users").document(userId)
+            .addSnapshotListener { document, error ->
+                if (document != null && document.exists()) {
+                    val profileImageBase64 = document.getString("profileImageBase64")
+                    if (!profileImageBase64.isNullOrEmpty()) {
+                        val imageBytes = Base64.decode(profileImageBase64, Base64.DEFAULT)
+                        Glide.with(requireContext())
+                            .load(imageBytes)
+                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                            .into(binding.profilePhoto)
+                    } else {
+                        Glide.with(requireContext())
+                            .load(R.drawable.baseline_account_circle_24)
+                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                            .into(binding.profilePhoto)
+                    }
+                }
+            }
     }
 
     private fun fetchSavedJobs() {
@@ -98,6 +177,7 @@ class SavedJobsFragment : Fragment() {
                 val projects = value?.documents?.mapNotNull { doc ->
                     try {
                         val data = doc.data ?: throw IllegalStateException("Document data is null")
+                        // Parse the project data
                         Project(
                             id = (data["id"] as? Number)?.toInt() ?: 0,
                             ownerId = (data["owner_id"] as? Number)?.toInt() ?: 0,
@@ -191,29 +271,6 @@ class SavedJobsFragment : Fragment() {
             }
     }
 
-    private fun fetchUserProfilePhoto() {
-        db.collection("users").document(userId)
-            .addSnapshotListener { document, error ->
-                if (document != null && document.exists()) {
-                    // Load profile image from Base64 string
-                    val profileImageBase64 = document.getString("profileImageBase64")
-                    if (!profileImageBase64.isNullOrEmpty()) {
-                        val imageBytes = Base64.decode(profileImageBase64, Base64.DEFAULT)
-                        Glide.with(requireContext())
-                            .load(imageBytes)
-                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
-                            .into(binding.profilePhoto)
-                    } else {
-                        // Set a default image if no Base64 string is found
-                        Glide.with(requireContext())
-                            .load(R.drawable.baseline_account_circle_24) // Default profile icon
-                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
-                            .into(binding.profilePhoto)
-                    }
-                }
-            }
-
-    }
     class SpacingItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
             outRect.left = space
@@ -221,4 +278,5 @@ class SavedJobsFragment : Fragment() {
             outRect.top = space
             outRect.bottom = space
         }
-}}
+    }
+}

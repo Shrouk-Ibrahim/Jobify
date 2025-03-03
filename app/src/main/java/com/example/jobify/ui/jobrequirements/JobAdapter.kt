@@ -28,16 +28,17 @@ class JobAdapter(private var projects: List<Project>,private val navController: 
 
     override fun onBindViewHolder(holder: JobViewHolder, position: Int) {
         val project = projects[position]
+        Log.d("JobAdapter", "Binding project: ${project.title} with ID: ${project.id}")
         holder.title.text = project.title
 
-        // Set click listener for the item
-        holder.itemView.setOnClickListener {
+        // Set click listener on the root view (ConstraintLayout)
+        holder.itemView.findViewById<View>(R.id.root_view).setOnClickListener {
+            Log.d("JobAdapter", "Item clicked! Navigating to JobDetailsFragment with projectId: ${project.id}")
             val bundle = Bundle().apply {
                 putInt("projectId", project.id)
             }
             navController.navigate(R.id.action_to_jobDetailsFragment, bundle)
         }
-
 
 
         // Fetch an image from Unsplash based on the project title
@@ -122,10 +123,9 @@ class JobAdapter(private var projects: List<Project>,private val navController: 
 
 
     fun updateJobs(newJobs: List<Project>) {
-        projects = newJobs.ifEmpty { emptyList() }
+        projects = newJobs
         notifyDataSetChanged()
     }
-
     override fun getItemCount(): Int = projects.size
 
     class JobViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

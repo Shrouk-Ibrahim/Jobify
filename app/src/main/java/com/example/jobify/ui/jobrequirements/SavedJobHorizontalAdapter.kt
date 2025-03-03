@@ -26,7 +26,14 @@ class SavedJobHorizontalAdapter(private var projects: List<Project>, private val
             .inflate(R.layout.item_job_horizontal, parent, false)
         return JobViewHolder(view)
     }
-
+    // Add this method to get the original list of projects
+    fun getOriginalList(): List<Project> {
+        return projects
+    }
+    fun updateJobs(newJobs: List<Project>) {
+        projects = newJobs
+        notifyDataSetChanged()
+    }
     override fun onBindViewHolder(holder: JobViewHolder, position: Int) {
         val project = projects[position]
         holder.title.text = project.title
@@ -67,10 +74,6 @@ class SavedJobHorizontalAdapter(private var projects: List<Project>, private val
 
         override fun getItemCount(): Int = projects.size
 
-    fun updateJobs(newJobs: List<Project>) {
-        projects = newJobs
-        notifyDataSetChanged()
-    }
 
     class JobViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.job_image)

@@ -24,15 +24,10 @@ class JobViewModel(private val apiService: ApiService) : ViewModel() {
 
     fun fetchProjects() {
         _isLoading.value = true
-
-        // Generate a list of random project IDs
-        val randomIds = List(300) { (10000..99999).random() } // Fetch 10 random projects
-
         viewModelScope.launch {
             try {
-                val response = apiService.getProjects(randomIds)
-                val projects = response.result.projects ?: emptyList()
-                _projects.value = projects
+                val response = apiService.getActiveProjects()
+                _projects.value = response.result.projects
             } catch (e: Exception) {
                 _errorMessage.value = "Error: ${e.message}"
                 Log.e("JobViewModel", "API Error: ${e.message}", e)
@@ -58,6 +53,7 @@ class JobViewModel(private val apiService: ApiService) : ViewModel() {
                 _errorMessage.value = "Error fetching saved jobs: ${exception.message}"
             }
     }
+
     private val _projectDetails = MutableLiveData<Project>()
     val projectDetails: LiveData<Project> get() = _projectDetails
 

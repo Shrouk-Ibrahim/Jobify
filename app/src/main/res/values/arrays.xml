@@ -1,0 +1,8 @@
+<resources>
+    <string-array name="project_statuses">
+        <item>All</item>
+        <item>Open</item>
+        <item>Closed</item>
+        <item>In Progress</item>
+    </string-array>
+</resources>
