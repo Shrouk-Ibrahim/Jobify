@@ -59,10 +59,17 @@ class JobViewModel(private val apiService: ApiService) : ViewModel() {
 
     fun fetchProjectDetails(projectId: Int) {
         _isLoading.value = true
+        Log.d("JobViewModel", "Fetching project details for projectId: $projectId")
         viewModelScope.launch {
             try {
                 val response = apiService.getProjectDetails(projectId)
-                _projectDetails.value = response.result.project
+                Log.d("JobViewModel", "Raw API Response: ${response.toString()}")
+                if (response.status == "success" && response.result != null) {
+                    _projectDetails.value = response.result
+                } else {
+                    _errorMessage.value = "Project not found or invalid response"
+                    Log.e("JobViewModel", "Project not found or invalid response")
+                }
             } catch (e: Exception) {
                 _errorMessage.value = "Error: ${e.message}"
                 Log.e("JobViewModel", "API Error: ${e.message}", e)

@@ -6,7 +6,9 @@ data class ProjectResponse(
     @SerializedName("request_id") val requestId: String
 )
 data class ProjectDetailsResponse(
-    val result: ProjectDetailsResult
+    val status: String,
+    val result: Project, // Directly contains the project details
+    @SerializedName("request_id") val requestId: String
 )
 
 data class ProjectDetailsResult(
