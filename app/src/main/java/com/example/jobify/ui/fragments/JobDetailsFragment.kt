@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.jobify.R
 import com.example.jobify.databinding.FragmentJobDetailsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -53,10 +54,70 @@ class JobDetailsFragment : Fragment() {
             fetchProjectDetailsFromFirestore()
             viewModel.fetchProjectDetails(projectId)
             observeProjectDetails()
+            checkIfProjectIsSaved()
         } else {
             binding.errorMessage.text = "Invalid project ID"
             binding.errorMessage.visibility = View.VISIBLE
         }
+
+        // Set up save icon click listener
+        binding.saveIcon.setOnClickListener {
+            toggleSaveProject()
+        }
+    }
+
+    private fun checkIfProjectIsSaved() {
+        db.collection("users").document(userId).collection("savedJobs")
+            .document(projectId.toString())
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // Project is saved, set icon to savefilled
+                    binding.saveIcon.setImageResource(R.drawable.savefilled)
+                } else {
+                    // Project is not saved, set icon to save
+                    binding.saveIcon.setImageResource(R.drawable.save)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("JobDetailsFragment", "Error checking if project is saved", e)
+            }
+    }
+
+    private fun toggleSaveProject() {
+        db.collection("users").document(userId).collection("savedJobs")
+            .document(projectId.toString())
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // Project is saved, unsave it
+                    db.collection("users").document(userId).collection("savedJobs")
+                        .document(projectId.toString())
+                        .delete()
+                        .addOnSuccessListener {
+                            binding.saveIcon.setImageResource(R.drawable.save)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("JobDetailsFragment", "Error unsaving project", e)
+                        }
+                } else {
+                    // Project is not saved, save it
+                    viewModel.projectDetails.value?.let { project ->
+                        db.collection("users").document(userId).collection("savedJobs")
+                            .document(projectId.toString())
+                            .set(project)
+                            .addOnSuccessListener {
+                                binding.saveIcon.setImageResource(R.drawable.savefilled)
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("JobDetailsFragment", "Error saving project", e)
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("JobDetailsFragment", "Error checking if project is saved", e)
+            }
     }
 
     private fun fetchProjectDetailsFromFirestore() {
@@ -92,6 +153,7 @@ class JobDetailsFragment : Fragment() {
                 viewModel.fetchProjectDetails(projectId)
             }
     }
+
     private fun observeProjectDetails() {
         viewModel.projectDetails.observe(viewLifecycleOwner) { project ->
             Log.d("JobDetailsFragment", "Project details observed: $project")
@@ -113,6 +175,7 @@ class JobDetailsFragment : Fragment() {
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
+
     private fun displayProjectDetails(project: Project) {
         Log.d("JobDetailsFragment", "Displaying project details: $project")
         binding.projectTitle.text = project.title ?: "No Title"
@@ -130,6 +193,4 @@ class JobDetailsFragment : Fragment() {
         binding.projectBudget.text = "Budget: ${project.budget?.minimum ?: 0} - ${project.budget?.maximum ?: 0} ${project.currency?.code ?: ""}"
         binding.projectBidStats.text = "Bids count: ${project.bid_stats?.bidCount ?: 0} "
     }
-
-
 }
