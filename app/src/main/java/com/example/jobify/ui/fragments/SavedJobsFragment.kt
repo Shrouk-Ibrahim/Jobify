@@ -18,9 +18,12 @@ import Upgrades
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -54,21 +57,34 @@ class SavedJobsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        db = FirebaseFirestore.getInstance()
+        // Set the initial state for the tabs
+        setTabSelected(binding.tabSavedJobs, true)
+        setTabSelected(binding.tabTrackJobs, false)
 
-        val displayMetrics: DisplayMetrics = resources.displayMetrics
-        val screenWidthDp: Float = displayMetrics.widthPixels / displayMetrics.density
-        val columnCount: Int = (screenWidthDp / 180).toInt()
+        // Set up click listeners for the tabs
+        binding.tabSavedJobs.setOnClickListener {
+            setTabSelected(binding.tabSavedJobs, true)
+            setTabSelected(binding.tabTrackJobs, false)
+            // No need to navigate here since we are already in SavedJobsFragment
+        }
+
+        binding.tabTrackJobs.setOnClickListener {
+            setTabSelected(binding.tabSavedJobs, false)
+            setTabSelected(binding.tabTrackJobs, true)
+            findNavController().navigate(R.id.action_savedJobsFragment_to_trackJobsFragment)
+        }
+
+        // Initialize Firestore and adapter
+        db = FirebaseFirestore.getInstance()
 
         savedJobAdapter = SavedJobHorizontalAdapter(emptyList(), findNavController())
 
         binding.savedJobsRecyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(), columnCount).apply {
-                isSmoothScrollbarEnabled = true
-            }
+            // Use LinearLayoutManager with vertical orientation
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             setHasFixedSize(true)
             adapter = savedJobAdapter
-            addItemDecoration(SpacingItemDecoration(16))
+            addItemDecoration(SpacingItemDecoration(16)) // Optional: Add spacing between items
         }
 
         setupSearchBar()
@@ -89,8 +105,15 @@ class SavedJobsFragment : Fragment() {
 
         fetchUserProfilePhoto()
         fetchSavedJobs()
+    }    private fun setTabSelected(button: Button, isSelected: Boolean) {
+        if (isSelected) {
+            button.setBackgroundResource(R.drawable.button_tab_background_selected) // Create this drawable
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.white)) // Change to your desired selected text color
+        } else {
+            button.setBackgroundResource(R.drawable.button_tab_background) // Default background
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.primaryColor)) // Change to your desired default text color
+        }
     }
-
     private fun setupSearchBar() {
         binding.searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

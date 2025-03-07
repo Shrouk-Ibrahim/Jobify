@@ -48,7 +48,9 @@ class JobAdapter(private var projects: List<Project>,private val navController: 
                     val photoUrl = response.body()?.results?.firstOrNull()?.urls?.regular
                     photoUrl?.let {
                         Glide.with(holder.itemView.context)
-                            .load(it)
+                            .load(photoUrl)
+                            .override(300, 200) // Set fixed dimensions for the image
+                            .centerCrop() // Ensure the image is cropped to fit the ImageView
                             .placeholder(android.R.drawable.ic_menu_gallery) // Placeholder image
                             .error(android.R.drawable.ic_dialog_alert) // Error image
                             .into(holder.image)

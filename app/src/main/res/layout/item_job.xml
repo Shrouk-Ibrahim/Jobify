@@ -8,48 +8,68 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="12dp"
-    android:background="@drawable/card_style"
-    android:layout_margin="20dp">
-
-    <ImageView
-        android:id="@+id/job_image"
-        android:layout_width="80dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="8dp"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/ic_menu_gallery"
-        app:layout_constraintBottom_toTopOf="@+id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Job Name"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/job_image"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:padding="12dp"
+        android:background="@drawable/card_style"
+        android:layout_margin="3dp">
 
+        <ImageView
+            android:id="@+id/job_image"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_gallery"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="H,16:9" />
 
-    <ImageView
-        android:id="@+id/save_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/save"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/title"
-        android:layout_marginStart="8dp"/>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Job Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/job_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/title_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp">
 
-    </ScrollView>
+            <ImageView
+                android:id="@+id/save_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/save"
+                android:layout_marginStart="8dp" />
+
+            <Button
+                android:id="@+id/applyButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Apply"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/primaryColor"
+                android:textSize="18sp"
+                android:padding="12dp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

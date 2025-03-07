@@ -65,6 +65,7 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = findNavController()
+
         // Initialize Firestore and adapter
         db = FirebaseFirestore.getInstance()
         savedJobAdapter = SavedJobHorizontalAdapter(emptyList(), navController)
@@ -103,17 +104,15 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
         }
 
         binding.seeMoreSavedJobs.setOnClickListener {
-            binding.profileScrollView.visibility = View.GONE
-            binding.frameContainer.visibility = View.VISIBLE
+            // Navigate to SavedJobsFragment using the main NavController
+            navController.navigate(R.id.savedJobsFragment)
+        }
 
-            val savedJobsFragment = SavedJobsFragment()
-            childFragmentManager.beginTransaction()
-                .replace(R.id.frameContainer, savedJobsFragment)
-                .addToBackStack("profile_to_saved")
-                .commit()
+        binding.seeMoreTrackJobs.setOnClickListener {
+            // Navigate to TrackJobsFragment using the main NavController
+            navController.navigate(R.id.trackJobsFragment)
         }
     }
-
     private fun fetchUserData() {
         Log.d("ProfileFragment", "Fetching user data for userId: $userId")
 
