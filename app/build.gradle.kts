@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id ("com.google.gms.google-services")
+    id("androidx.navigation.safeargs.kotlin")version ("2.7.7")
 }
 
 android {
@@ -48,6 +49,7 @@ android {
 dependencies {
 // Firebase dependencies
     implementation ("androidx.core:core-ktx:1.10.1")
+    implementation ("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation("org.chromium.net:cronet-embedded:119.6045.31")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:3.0.3")

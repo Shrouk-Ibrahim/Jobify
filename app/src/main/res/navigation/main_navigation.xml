@@ -4,10 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/homeFragment">
 
-        <fragment
-            android:id="@+id/homeFragment"
-            android:name="com.example.jobify.ui.fragments.HomeFragment"
-            tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.jobify.ui.fragments.HomeFragment"
+        tools:layout="@layout/fragment_home">
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/jobDetailsFragment"
+        android:name="com.example.jobify.ui.fragments.JobDetailsFragment"
+        tools:layout="@layout/fragment_job_details" />
+
+    <action
+        android:id="@+id/action_to_jobDetailsFragment"
+        app:destination="@id/jobDetailsFragment" />
 
         <fragment
             android:id="@+id/jobsFragment"
@@ -22,6 +34,7 @@
         <fragment
             android:id="@+id/profileFragment"
             android:name="com.example.jobify.ui.fragments.ProfileFragment"
-            tools:layout="@layout/fragment_profile" />
+            tools:layout="@layout/fragment_profile"/>
+
 
     </navigation>
