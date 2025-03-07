@@ -80,8 +80,9 @@ class HomeFragment : Fragment() {
     private fun setupRecyclerView() {
         jobAdapter = JobAdapter(emptyList(), findNavController())
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2)
+            layoutManager = GridLayoutManager(requireContext(), 2) // 2 columns
             adapter = jobAdapter
+            setHasFixedSize(true) // This ensures that the RecyclerView items have fixed size
         }
     }
 

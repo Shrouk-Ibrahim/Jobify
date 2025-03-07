@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.NavController
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.jobify.R
 import com.example.jobify.ui.fragments.JobDetailsFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,63 +24,130 @@ import retrofit2.Response
 class SavedJobHorizontalAdapter(private var projects: List<Project>, private val navController: NavController) :
     RecyclerView.Adapter<SavedJobHorizontalAdapter.JobViewHolder>() {
 
+    private val db = FirebaseFirestore.getInstance()
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JobViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_job_horizontal, parent, false)
+            .inflate(R.layout.item_job, parent, false)
         return JobViewHolder(view)
     }
+
     // Add this method to get the original list of projects
     fun getOriginalList(): List<Project> {
         return projects
     }
+
     fun updateJobs(newJobs: List<Project>) {
         projects = newJobs
         notifyDataSetChanged()
     }
+
     override fun onBindViewHolder(holder: JobViewHolder, position: Int) {
         val project = projects[position]
         holder.title.text = project.title
-        holder.description.text = project.description
 
-
-        holder.itemView.setOnClickListener {
+        // Set click listener on the root view (ConstraintLayout)
+        holder.itemView.findViewById<View>(R.id.root_view).setOnClickListener {
             val bundle = Bundle().apply {
                 putInt("projectId", project.id)
             }
             navController.navigate(R.id.action_to_jobDetailsFragment, bundle)
         }
 
-        UnsplashRetrofitClient.instance.searchPhotos(project.title).enqueue(object :
-            Callback<UnsplashResponse> {
-            override fun onResponse(
-                call: Call<UnsplashResponse>,
-                response: Response<UnsplashResponse>
-            ) {
+        // Fetch an image from Unsplash based on the project title
+        UnsplashRetrofitClient.instance.searchPhotos(project.title).enqueue(object : Callback<UnsplashResponse> {
+            override fun onResponse(call: Call<UnsplashResponse>, response: Response<UnsplashResponse>) {
                 if (response.isSuccessful) {
                     val photoUrl = response.body()?.results?.firstOrNull()?.urls?.regular
                     photoUrl?.let {
                         Glide.with(holder.itemView.context)
-                            .load(it)
-                            .placeholder(android.R.drawable.ic_menu_gallery)
-                            .error(android.R.drawable.ic_dialog_alert)
+                            .load(photoUrl)
+                            .override(300, 200) // Set fixed dimensions for the image
+                            .centerCrop() // Ensure the image is cropped to fit the ImageView
+                            .placeholder(android.R.drawable.ic_menu_gallery) // Placeholder image
+                            .error(android.R.drawable.ic_dialog_alert) // Error image
                             .into(holder.image)
                     }
+                } else {
+                    Log.e("SavedJobHorizontalAdapter", "Failed to fetch image from Unsplash: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<UnsplashResponse>, t: Throwable) {
-                Log.e("JobAdapter", "Failed to load image: ${t.message}")
+                Log.e("SavedJobHorizontalAdapter", "Error fetching image from Unsplash", t)
             }
         })
+
+        // Check if the job is saved by the current user
+        userId?.let { uid ->
+            db.collection("users").document(uid).collection("savedJobs")
+                .document(project.id.toString())
+                .get()
+                .addOnSuccessListener { document ->
+                    val isSaved = document.exists()
+                    holder.isSaved = isSaved
+                    holder.saveIcon.setImageResource(if (isSaved) R.drawable.savefilled else R.drawable.save)
+                }
+                .addOnFailureListener { e ->
+                    Log.e("SavedJobHorizontalAdapter", "Error checking if job is saved", e)
+                }
+        } ?: run {
+            Log.e("SavedJobHorizontalAdapter", "User ID is null, cannot check saved jobs")
+        }
+
+        // Handle save/unsave button click
+        holder.saveIcon.setOnClickListener {
+            userId?.let { uid ->
+                if (holder.isSaved) {
+                    // Unsave the job
+                    holder.saveIcon.setImageResource(R.drawable.save)
+                    holder.isSaved = false
+
+                    db.collection("users").document(uid).collection("savedJobs")
+                        .document(project.id.toString())
+                        .delete()
+                        .addOnSuccessListener {
+                            notifyItemChanged(position)
+                        }
+                        .addOnFailureListener { e ->
+                            holder.saveIcon.setImageResource(R.drawable.savefilled)
+                            holder.isSaved = true
+                        }
+                } else {
+                    // Save the job
+                    holder.saveIcon.setImageResource(R.drawable.savefilled)
+                    holder.isSaved = true
+
+                    db.collection("users").document(uid).collection("savedJobs")
+                        .document(project.id.toString())
+                        .set(project)
+                        .addOnSuccessListener {
+                            notifyItemChanged(position)
+                        }
+                        .addOnFailureListener { e ->
+                            holder.saveIcon.setImageResource(R.drawable.save)
+                            holder.isSaved = false
+                        }
+                }
+            } ?: run {
+                Log.e("SavedJobHorizontalAdapter", "User ID is null, cannot save/unsave job")
+            }
+        }
+
+        // Handle apply button click
+        holder.applyButton.setOnClickListener {
+            // Implement apply logic here
+        }
     }
 
-
-        override fun getItemCount(): Int = projects.size
-
+    override fun getItemCount(): Int = projects.size
 
     class JobViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.job_image)
         val title: TextView = itemView.findViewById(R.id.title)
-        val description: TextView = itemView.findViewById(R.id.description)
+        val saveIcon: ImageView = itemView.findViewById(R.id.save_icon)
+        val applyButton: Button = itemView.findViewById(R.id.applyButton)
+        var isSaved: Boolean = false
     }
 }

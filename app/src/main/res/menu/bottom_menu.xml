@@ -5,7 +5,7 @@
         android:icon="@drawable/baseline_home_24" />
 
     <item
-        android:id="@+id/jobsFragment"
+        android:id="@+id/savedJobsFragment"
         android:title="Jobs"
         android:icon="@drawable/baseline_shopping_bag_24" />
     <item

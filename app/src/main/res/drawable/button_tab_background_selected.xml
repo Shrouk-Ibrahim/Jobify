@@ -1,0 +1,6 @@
+<!-- res/drawable/button_tab_background_selected.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/primaryColor" /> <!-- Change to your desired selected color -->
+    <corners android:radius="8dp" /> <!-- Rounded corners -->
+</shape>

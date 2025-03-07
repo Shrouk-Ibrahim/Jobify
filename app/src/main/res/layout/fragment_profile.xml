@@ -5,7 +5,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--  ScrollView to make the content scrollable  -->
+
+        <!-- ScrollView to make the content scrollable -->
         <ScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -20,7 +21,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <!--  CardView  -->
+
+                <!-- CardView -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView"
                     android:layout_width="match_parent"
@@ -28,7 +30,7 @@
                     android:layout_margin="1dp"
                     app:cardCornerRadius="50dp"
                     app:cardElevation="9dp">
-                    <!--  Add your content inside the CardView  -->
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -36,7 +38,8 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="1dp">
-                        <!--  Image with Camera Icon  -->
+
+                        <!-- Image with Camera Icon -->
                         <FrameLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -44,7 +47,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
-                            <!--  Profile Image  -->
+
+                            <!-- Profile Image -->
                             <de.hdodenhof.circleimageview.CircleImageView
                                 android:id="@+id/profileImage"
                                 android:layout_width="150dp"
@@ -52,7 +56,8 @@
                                 android:src="@drawable/profile"
                                 app:civ_border_color="@android:color/white"
                                 app:civ_border_width="2dp" />
-                            <!--  Camera Icon  -->
+
+                            <!-- Camera Icon -->
                             <ImageView
                                 android:id="@+id/cameraIcon"
                                 android:layout_width="40dp"
@@ -62,14 +67,16 @@
                                 android:padding="8dp"
                                 android:src="@drawable/baseline_camera_alt_24" />
                         </FrameLayout>
-                        <!--  Name and Edit Icon Row  -->
+
+                        <!-- Name and Edit Icon Row -->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:gravity="center"
                             android:orientation="horizontal">
-                            <!--  Name  -->
+
+                            <!-- Name -->
                             <TextView
                                 android:id="@+id/profileName"
                                 android:layout_width="wrap_content"
@@ -78,7 +85,8 @@
                                 android:textColor="@android:color/white"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
-                            <!--  Edit Icon  -->
+
+                            <!-- Edit Icon -->
                             <ImageView
                                 android:id="@+id/editIcon"
                                 android:layout_width="24dp"
@@ -88,8 +96,8 @@
                                 android:focusable="true"
                                 android:src="@drawable/baseline_edit_square_24" />
                         </LinearLayout>
-                        <!--  Job Title  -->
 
+                        <!-- Job Title -->
                         <TextView
                             android:id="@+id/jobTitle"
                             android:layout_width="wrap_content"
@@ -98,7 +106,8 @@
                             android:text="@string/job_title"
                             android:textColor="@android:color/white"
                             android:textSize="13sp" />
-                        <!--  Faculty and University  -->
+
+                        <!-- Faculty and University -->
                         <TextView
                             android:id="@+id/facultyText"
                             android:layout_width="wrap_content"
@@ -108,14 +117,16 @@
                             android:text="@string/faculty_text"
                             android:textColor="@android:color/white"
                             android:textSize="13sp" />
-                        <!--  Address and Contact Info Row  -->
+
+                        <!-- Address and Contact Info Row -->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="1dp"
                             android:gravity="center"
                             android:orientation="horizontal">
-                            <!--  Address  -->
+
+                            <!-- Address -->
                             <TextView
                                 android:id="@+id/addressText"
                                 android:layout_width="wrap_content"
@@ -123,7 +134,8 @@
                                 android:text="@string/address_text"
                                 android:textColor="@android:color/white"
                                 android:textSize="13sp" />
-                            <!--  Contact Info (Clickable Text)  -->
+
+                            <!-- Contact Info (Clickable Text) -->
                             <TextView
                                 android:id="@+id/contactInfoButton"
                                 android:layout_width="wrap_content"
@@ -139,7 +151,7 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!--  TextView: Saved Jobs  -->
+                <!-- TextView: Saved Jobs -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -153,9 +165,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/saved_jobs"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
-                    <!--  "See More" Button  -->
+
+                    <!-- "See More" Button -->
                     <TextView
                         android:id="@+id/seeMoreSavedJobs"
                         android:layout_width="0dp"
@@ -171,9 +184,6 @@
                 </LinearLayout>
 
                 <!-- Horizontal RecyclerView for Saved Jobs -->
-                <!-- After Saved Jobs TextView -->
-                <!-- fragment_profile.xml -->
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/savedJobsRecyclerView"
                     android:layout_width="match_parent"
@@ -183,16 +193,59 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_job_horizontal" />
 
+                <!-- Track Applications Status Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/track_applications_status"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <!-- "See More" Button -->
+                    <TextView
+                        android:id="@+id/seeMoreTrackJobs"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="end"
+                        android:onClick="onSeeMoreTrackJobsClick"
+                        android:text="@string/see_more"
+                        android:textColor="@color/primaryColor"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Horizontal RecyclerView for Track Applications Status -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/trackApplicationsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    />
             </LinearLayout>
         </ScrollView>
-        <!--  FrameLayout for Fragments  -->
+
+        <!-- FrameLayout for Fragments -->
         <FrameLayout
             android:id="@+id/frameContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@id/bottom_menu"
             app:layout_constraintTop_toTopOf="parent" />
-        <!--  BottomNavigationView  -->
+
+        <!-- BottomNavigationView -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_menu"
             android:layout_width="0dp"
