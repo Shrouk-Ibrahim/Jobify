@@ -22,9 +22,9 @@
         app:destination="@id/jobDetailsFragment" />
 
         <fragment
-            android:id="@+id/jobsFragment"
-            android:name="com.example.jobify.ui.fragments.JobsFragment"
-            tools:layout="@layout/fragment_jobs" />
+            android:id="@+id/savedJobsFragment"
+            android:name="com.example.jobify.ui.fragments.SavedJobsFragment"
+            tools:layout="@layout/fragment_saved_jobs" />
 
         <fragment
             android:id="@+id/notificationsFragment"

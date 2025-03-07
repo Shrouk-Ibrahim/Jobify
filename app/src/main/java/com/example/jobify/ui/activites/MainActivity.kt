@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.jobsFragment -> {
-                    navController.navigate(R.id.jobsFragment)
+                R.id.savedJobsFragment -> {
+                    navController.navigate(R.id.savedJobsFragment)
                     true
                 }
 
