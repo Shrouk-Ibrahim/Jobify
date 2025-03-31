@@ -15,6 +15,7 @@ The app integrates Firebase Authentication, Firestore, a job search API from a f
 - **User Authentication:** Email/password authentication using Firebase.
 - **Job Listings:** Integration with a freelancer platform API to fetch job listings.
 - **Job Application Tracking:** Save, track, and manage job applications.
+- **Admin Dashboard:** Feature for admins to accept or reject job applications from users.
 - **Image Fetching:** Unsplash API integration for category-based images.
 - **Notifications:** Push notifications for application status updates and reminders.
 
@@ -36,10 +37,15 @@ The app integrates Firebase Authentication, Firestore, a job search API from a f
 - Fetch relevant images for job categories.
 - Enhance UI with high-quality images.
 
-
 ## Push Notifications (Firebase Cloud Messaging)
 - Users receive notifications for status updates on their job applications.
 - Custom notifications for reminders and deadlines.
+- Admins can trigger notifications when an application is accepted or rejected.
+
+## Admin Dashboard
+- **View Applications:** Admins can see all job applications submitted by users.
+- **Accept/Reject Applications:** Admins can approve or decline job applications.
+- **Notify Users:** Upon approval or rejection, users receive real-time notifications.
 
 ## Navigation Flow
 1. **Splash Screen** → Login/Signup
@@ -50,3 +56,5 @@ The app integrates Firebase Authentication, Firestore, a job search API from a f
    - Job Details → When clicking on a job
    - Profile → User Information & Settings
    - Notifications → Application Updates & Reminders
+   - Admin Panel (For admins only) → Manage Applications
+
