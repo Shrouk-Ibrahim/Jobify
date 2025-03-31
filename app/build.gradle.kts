@@ -6,14 +6,12 @@ plugins {
 }
 
 android {
-    buildFeatures {
-        viewBinding = true
-    }
+
     namespace = "com.example.jobify"
     compileSdk = 35
     buildFeatures {
-        dataBinding = true
-
+        viewBinding =true
+        dataBinding =true
     }
     defaultConfig {
         applicationId = "com.example.jobify"
@@ -48,6 +46,7 @@ android {
 
 dependencies {
 // Firebase dependencies
+
     implementation ("androidx.core:core-ktx:1.10.1")
     implementation ("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
     implementation ("com.github.bumptech.glide:glide:4.12.0")

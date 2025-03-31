@@ -15,11 +15,15 @@ class AuthViewModel : ViewModel() {
     val authState: LiveData<Resource<FirebaseUser>> get() = authRepository.authState
 
     // Function to handle user signup
+    // AuthViewModel.kt
     fun signup(name: String, email: String, password: String) {
-        // Call the signup function in the AuthRepository
         authRepository.signup(name, email, password)
     }
 
+    // In AuthViewModel.kt
+    fun checkAdminStatus(userId: String, callback: (Boolean) -> Unit) {
+        authRepository.checkAdminStatus(userId, callback)
+    }
     // Function to handle user login
     fun login(email: String, password: String) {
         // Call the login function in the AuthRepository

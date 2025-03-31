@@ -11,15 +11,21 @@
         android:label="Login"
         tools:layout="@layout/fragment_login">
 
-        <!-- Action to navigate to SignupFragment -->
+        <action
+            android:id="@+id/action_loginFragment_to_adminDashboardFragment"
+            app:destination="@id/adminDashboardFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_mainActivity"
+            app:destination="@id/mainActivity"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
-
-        <!-- Action to navigate to MainActivity -->
-        <action
-            android:id="@+id/action_loginFragment_to_mainActivity"
-            app:destination="@id/mainActivity" />
     </fragment>
 
     <!-- Signup Fragment -->
@@ -29,18 +35,37 @@
         android:label="Sign Up"
         tools:layout="@layout/fragment_sign_up">
 
-        <!-- Action to navigate to LoginFragment -->
         <action
             android:id="@+id/action_signupFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
 
-        <!-- Action to navigate to MainActivity -->
         <action
             android:id="@+id/action_signupFragment_to_mainActivity"
-            app:destination="@id/mainActivity" />
+            app:destination="@id/mainActivity"
+            app:popUpTo="@id/signupFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
-    <!-- MainActivity Destination -->
+    <!-- Admin Dashboard Fragment -->
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.example.jobify.ui.fragments.AdminDashboardFragment"
+        android:label="Admin Dashboard"
+        tools:layout="@layout/fragment_admin_dashboard">
+
+
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_adminApplicationsFragment"
+            app:destination="@id/adminApplicationsFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/adminApplicationsFragment"
+        android:name="com.example.jobify.ui.fragments.AdminApplicationsFragment"
+        android:label="Manage Applications" />
+
+    <!-- Main Activity Destination -->
     <activity
         android:id="@+id/mainActivity"
         android:name="com.example.jobify.ui.activites.MainActivity"

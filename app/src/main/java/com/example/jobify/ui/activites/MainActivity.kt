@@ -15,7 +15,6 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Apply the saved locale only if the user has explicitly chosen a language
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -41,23 +40,20 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.homeFragment)
                     true
                 }
-
                 R.id.savedJobsFragment -> {
                     navController.navigate(R.id.savedJobsFragment)
                     true
                 }
-
                 R.id.notificationsFragment -> {
                     navController.navigate(R.id.notificationsFragment)
                     true
                 }
-
                 R.id.profileFragment -> {
                     navController.navigate(R.id.profileFragment)
                     true
-
                 }
-
                 else -> false
             }
-        }}}
+        }
+    }
+}
