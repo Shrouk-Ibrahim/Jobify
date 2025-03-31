@@ -85,7 +85,16 @@ data class BidStats(
     // Add a no-argument constructor
     constructor() : this(0, 0.0)
 }
-
+data class AppliedJob(
+    val id: String,
+    val jobId: String,
+    val jobTitle: String,
+    val bidAmount: Double,
+    val deliveryTime: String,
+    val description: String,
+    val status: String,
+    val timestamp: Long
+)
 data class Upgrades(
     val featured: Boolean = false, // Default value
     val sealed: Boolean = false, // Default value

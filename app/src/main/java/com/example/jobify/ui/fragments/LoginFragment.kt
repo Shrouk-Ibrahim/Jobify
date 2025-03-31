@@ -19,17 +19,13 @@ import com.google.android.material.textfield.TextInputLayout
 
 class LoginFragment : Fragment() {
 
-    // ViewBinding for the fragment
     private lateinit var binding: FragmentLoginBinding
-
-    // ViewModel for handling authentication logic
     private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout using ViewBinding
+    ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -37,109 +33,130 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize the ViewModel
         viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
-        // Set up password visibility toggle for the start icon
         binding.passwordInputLayout.setStartIconOnClickListener {
             togglePasswordVisibility(binding.passwordLoginField, binding.passwordInputLayout)
         }
 
-        // Set up login button click listener
         binding.loginButton.setOnClickListener {
-            // Get user input from email and password fields
             val email = binding.emailLoginField.text.toString().trim()
             val password = binding.passwordLoginField.text.toString().trim()
 
-            // Clear previous errors
             binding.emailLoginField.error = null
             binding.passwordLoginField.error = null
 
-            // Test Case 1: Check if email field is empty
             if (email.isEmpty()) {
                 binding.emailLoginField.error = "Email is required"
                 return@setOnClickListener
             }
 
-            // Test Case 2: Check if password field is empty
             if (password.isEmpty()) {
                 binding.passwordLoginField.error = "Password is required"
                 return@setOnClickListener
             }
 
-            // Test Case 3: Validate email format
             if (!isValidEmail(email)) {
                 binding.emailLoginField.error = "Invalid email format"
                 return@setOnClickListener
             }
 
-            // Test Case 4: Validate password format
             if (!isValidPassword(password)) {
                 binding.passwordLoginField.error = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
                 return@setOnClickListener
             }
-
-            // Call ViewModel to perform login with the provided email and password
+            viewModel.login("admin@gmail.com", "admin123Ys")
             viewModel.login(email, password)
         }
 
-        // Set up sign-up link click listener
         binding.signUpLink.setOnClickListener {
-            // Navigate to the SignupFragment using the navigation graph
-            findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
+            safeNavigate(R.id.action_loginFragment_to_signupFragment)
         }
 
-        // Observe authentication state changes from the ViewModel
+
         viewModel.authState.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is Resource.Loading -> {
-                    // Show loading indicator
-                    Toast.makeText(requireContext(), "Logging in...", Toast.LENGTH_SHORT).show()
+                    showLoading()
                 }
                 is Resource.Success -> {
-                    // Login successful
-                    Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_loginFragment_to_mainActivity)                }
-                is Resource.Error -> {
-                    // Login failed
-                    when (state.message) {
-                        "No account found with this email. Please sign up." -> {
-                            binding.emailLoginField.error = state.message
+                    state.data?.let { user ->
+                        viewModel.checkAdminStatus(user.uid) { isAdmin ->
+                            if (isAdmin) {
+                                navigateToAdminDashboard()
+                            } else {
+                                navigateToMainActivity()
+                            }
                         }
-                        "Invalid password. Please try again." -> {
-                            binding.passwordLoginField.error = state.message
-                        }
-                        else -> {
-                            Toast.makeText(requireContext(), "Login failed: ${state.message}", Toast.LENGTH_SHORT).show()
-                        }
+                    } ?: run {
+                        showError("User authentication failed")
                     }
+                }
+                is Resource.Error -> {
+                    handleLoginError(state.message)
                 }
             }
         })
     }
 
-    // Function to toggle password visibility
+    private fun showLoading() {
+        Toast.makeText(requireContext(), "Logging in...", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToAdminDashboard() {
+        Toast.makeText(requireContext(), "Admin login successful!", Toast.LENGTH_SHORT).show()
+        safeNavigate(R.id.action_loginFragment_to_adminDashboardFragment)
+    }
+
+    private fun navigateToMainActivity() {
+        Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
+        safeNavigate(R.id.action_loginFragment_to_mainActivity)
+    }
+
+    private fun handleLoginError(message: String?) {
+        when (message) {
+            "No account found with this email. Please sign up." -> {
+                binding.emailLoginField.error = message
+            }
+            "Invalid password. Please try again." -> {
+                binding.passwordLoginField.error = message
+            }
+            else -> {
+                showError("Login failed: ${message ?: "Unknown error"}")
+            }
+        }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun safeNavigate(actionId: Int) {
+        try {
+            if (findNavController().currentDestination?.id == R.id.loginFragment) {
+                findNavController().navigate(actionId)
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Navigation error: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun togglePasswordVisibility(editText: TextInputEditText, textInputLayout: TextInputLayout) {
         val isPasswordVisible = editText.transformationMethod == null
         if (isPasswordVisible) {
-            // Hide password
             editText.transformationMethod = PasswordTransformationMethod.getInstance()
             textInputLayout.startIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_visibility_off)
         } else {
-            // Show password
             editText.transformationMethod = null
             textInputLayout.startIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_visibility)
         }
-        // Move cursor to the end of the text
         editText.setSelection(editText.text?.length ?: 0)
     }
 
-    // Function to validate email format
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    // Function to validate password format
     private fun isValidPassword(password: String): Boolean {
         val passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$"
         return password.matches(passwordRegex.toRegex())
