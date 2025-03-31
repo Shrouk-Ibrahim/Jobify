@@ -223,6 +223,14 @@
                         android:text="@string/see_more"
                         android:textColor="@color/primaryColor"
                         android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/noTrackedJobsText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center"
+                        android:text="No tracked jobs found"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <!-- Horizontal RecyclerView for Track Applications Status -->

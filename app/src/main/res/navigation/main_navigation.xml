@@ -29,6 +29,14 @@
         <action
             android:id="@+id/action_trackJobsFragment_to_savedJobsFragment"
             app:destination="@id/savedJobsFragment" />
+        <action
+            android:id="@+id/action_trackJobsFragment_to_jobDetailsFragment"
+            app:destination="@id/jobDetailsFragment">
+            <argument
+                android:name="projectId"
+                android:defaultValue="-1"
+                app:argType="integer" />
+        </action>
     </fragment>
 
     <fragment
@@ -44,10 +52,24 @@
             android:name="com.example.jobify.ui.fragments.NotificationsFragment"
             tools:layout="@layout/fragment_notifications" />
 
-        <fragment
-            android:id="@+id/profileFragment"
-            android:name="com.example.jobify.ui.fragments.ProfileFragment"
-            tools:layout="@layout/fragment_profile"/>
-
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.jobify.ui.fragments.ProfileFragment"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_jobDetailsFragment"
+            app:destination="@id/jobDetailsFragment">
+            <argument
+                android:name="projectId"
+                android:defaultValue="-1"
+                app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_profileFragment_to_trackJobsFragment"
+            app:destination="@id/trackJobsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_savedJobsFragment"
+            app:destination="@id/savedJobsFragment" />
+    </fragment>
 
     </navigation>

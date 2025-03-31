@@ -29,6 +29,7 @@ class HomeFragment : Fragment() {
     private lateinit var jobAdapter: JobAdapter
     private lateinit var db: FirebaseFirestore
 
+
     private val userId: String
         get() = FirebaseAuth.getInstance().currentUser?.uid ?: throw IllegalStateException("User not logged in")
 
