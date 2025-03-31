@@ -1,14 +1,18 @@
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.jobify.R
+import com.example.jobify.ui.dialogs.ApplyJobDialog
 import com.example.jobify.ui.fragments.JobDetailsFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -121,6 +125,80 @@ class JobAdapter(private var projects: List<Project>,private val navController: 
                 Log.e("JobAdapter", "User ID is null, cannot save/unsave job")
             }
         }
+        fun updateButtonStatus(status: String) {
+            holder.applyButton.apply {
+                isEnabled = false
+                text = status.replaceFirstChar { it.uppercase() }
+                when (status.lowercase()) {
+                    "accepted" -> {
+                        backgroundTintList =
+                            ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
+                    }
+
+                    "rejected" -> {
+                        backgroundTintList =
+                            ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red))
+                    }
+
+                    "pending" -> {
+                        backgroundTintList =
+                            ColorStateList.valueOf(ContextCompat.getColor(context, R.color.orange))
+                    }
+
+                    else -> {
+                        backgroundTintList =
+                            ColorStateList.valueOf(ContextCompat.getColor(context, R.color.grey))
+                    }
+                }
+                setTextColor(ContextCompat.getColor(context, R.color.white))
+            }
+        }
+
+        // Check application status
+        db.collection("users").document(userId ?: "").collection("appliedJobs")
+            .whereEqualTo("jobId", project.id.toString())
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    // Not applied yet
+                    holder.applyButton.apply {
+                        text = "Apply"
+                        isEnabled = true
+                        backgroundTintList = ColorStateList.valueOf(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.primaryColor
+                            )
+                        )
+                        setTextColor(ContextCompat.getColor(context, R.color.white))
+                    }
+                } else {
+                    // Applied - get status
+                    val status = documents.documents.firstOrNull()?.getString("status") ?: "pending"
+                    updateButtonStatus(status)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("SavedJobAdapter", "Error checking application status", e)
+            }
+
+        // Apply button click listener
+        holder.applyButton.setOnClickListener {
+            val dialog = ApplyJobDialog().apply {
+                jobId = project.id.toString()
+                jobTitle = project.title ?: ""
+                setListener(object : ApplyJobDialog.ApplyJobListener {
+                    override fun onJobApplied() {
+                        // Immediately update UI to show pending status
+                        updateButtonStatus("pending")
+                    }
+                })
+            }
+            dialog.show(
+                (holder.itemView.context as androidx.fragment.app.FragmentActivity).supportFragmentManager,
+                "ApplyJobDialog"
+            )
+        }
     }
 
 
@@ -133,7 +211,8 @@ class JobAdapter(private var projects: List<Project>,private val navController: 
     class JobViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title)
         val saveIcon: ImageView = itemView.findViewById(R.id.save_icon)
-        val image: ImageView = itemView.findViewById(R.id.job_image) // Ensure this ID exists in item_job.xml
+        val image: ImageView = itemView.findViewById(R.id.job_image)
+        val applyButton: Button = itemView.findViewById(R.id.applyButton)
         var isSaved: Boolean = false
     }
 }

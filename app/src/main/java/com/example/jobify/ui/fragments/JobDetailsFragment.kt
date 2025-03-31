@@ -3,11 +3,14 @@ package com.example.jobify.ui.fragments
 import JobViewModel
 import JobViewModelFactory
 import Project
+import android.content.res.ColorStateList
+import com.example.jobify.ui.dialogs.ApplyJobDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.jobify.R
@@ -48,13 +51,14 @@ class JobDetailsFragment : Fragment() {
         val apiService = FreelancerRetrofitClient.instance
         val viewModelFactory = JobViewModelFactory(apiService)
         viewModel = ViewModelProvider(this, viewModelFactory).get(JobViewModel::class.java)
-
+setupViews()
         // Fetch and display project details
         if (projectId != -1) {
             fetchProjectDetailsFromFirestore()
             viewModel.fetchProjectDetails(projectId)
             observeProjectDetails()
             checkIfProjectIsSaved()
+            checkApplicationStatus()
         } else {
             binding.errorMessage.text = "Invalid project ID"
             binding.errorMessage.visibility = View.VISIBLE
@@ -152,6 +156,64 @@ class JobDetailsFragment : Fragment() {
                 // If there's an error, fetch the project from the API
                 viewModel.fetchProjectDetails(projectId)
             }
+    }
+    // JobDetailsFragment.kt (partial update)
+// JobDetailsFragment.kt (partial update)
+    private fun setupViews() {
+        binding.applyButton.setOnClickListener {
+            showApplyDialog()
+        }
+    }
+
+    private fun showApplyDialog() {
+        val dialog = ApplyJobDialog().apply {
+            jobId = projectId.toString()
+            jobTitle = viewModel.projectDetails.value?.title ?: ""
+            setListener(object : ApplyJobDialog.ApplyJobListener {
+                override fun onJobApplied() {
+                    checkApplicationStatus()
+                }
+            })
+        }
+        dialog.show(parentFragmentManager, "ApplyJobDialog")
+    }
+
+    private fun checkApplicationStatus() {
+        db.collection("users").document(userId).collection("appliedJobs")
+            .whereEqualTo("jobId", projectId.toString())
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val status = documents.documents.firstOrNull()?.getString("status") ?: "pending"
+                    updateApplyButton(status)
+                }
+            }
+    }
+
+    private fun updateApplyButton(status: String) {
+        binding.applyButton.apply {
+            isEnabled = false
+            text = status.replaceFirstChar { it.uppercase() }
+            when (status.lowercase()) {
+                "accepted" -> {
+                    backgroundTintList =
+                        ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.green))
+                }
+                "rejected" -> {
+                    backgroundTintList =
+                        ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.red))
+                }
+                "pending" -> {
+                    backgroundTintList =
+                        ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.orange))
+                }
+                else -> {
+                    backgroundTintList =
+                        ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.grey))
+                }
+            }
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        }
     }
 
     private fun observeProjectDetails() {

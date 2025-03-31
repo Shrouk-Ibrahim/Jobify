@@ -1,81 +1,52 @@
+# Jobify - Job Search and Application Tracker
 
-# **Project Directory Structure**
+## Project Overview
+Jobify is an Android application designed to help users search for job listings, apply for positions, and track their application progress.
+The app integrates Firebase Authentication, Firestore, a job search API from a freelancer platform, and the Unsplash API for fetching images by category.
 
-```
-src/
-└── main/
-    └── java/
-        └── com/
-            └── yourapp/
-                ├── repository/
-                │   ├── AuthRepository.kt
-                │
-                ├── viewmodel/
-                │   ├── AuthViewModel.kt
-                │   
-                ├── ui/
-                │   ├── activities/
-                │   │   ├── AuthActivity.kt
-                │   │
-                │   ├── fragments/
-                │       ├── LoginFragment.kt
-                │       ├── SignupFragment.kt
-                │   
-                ├── navigation/
-                │   ├── auth_navigation.xml
-                │
-                ├── res/
-                    ├── layout/
-                    │   ├── activity_auth.xml
-                    │   ├── fragment_login.xml
-                    │   ├── fragment_signup.xml
-                    │
-                    ├── values/
-                        ├── colors.xml
-```
+## Graduation Project Information
+- **Department:** Depi in Track Mobile Application Development
+- **Team Members:**
+   - Shrouk Ibrahim (Team Leader)
+   - Rodayna Mohamed
+- **Group Code:** ALX2_SWD4_G1 Mobile Application Developer
+
+## Key Features
+- **User Authentication:** Email/password authentication using Firebase.
+- **Job Listings:** Integration with a freelancer platform API to fetch job listings.
+- **Job Application Tracking:** Save, track, and manage job applications.
+- **Image Fetching:** Unsplash API integration for category-based images.
+- **Notifications:** Push notifications for application status updates and reminders.
+
+## Technologies Used
+- **Frontend:** Android (XML for UI design)
+- **Backend:** Kotlin (Application Logic)
+- **Database:** Firebase Firestore
+- **Authentication:** Firebase Authentication (Email/Password)
+- **APIs:** Freelancer Platform API (Job Listings), Unsplash API (Images)
+- **Notifications:** Firebase Cloud Messaging (FCM)
+
+## API Integrations
+### Job Search API (Freelancer Platform)
+- Fetch job listings via REST API.
+- Display results dynamically in the app.
+- Provide filters based on category, location, and type.
+
+### Unsplash API (Image Fetching by Category)
+- Fetch relevant images for job categories.
+- Enhance UI with high-quality images.
 
 
-# **Sequence of Operations**
+## Push Notifications (Firebase Cloud Messaging)
+- Users receive notifications for status updates on their job applications.
+- Custom notifications for reminders and deadlines.
 
-## **Login Flow**
-1. **User Input:**
-   - User enters email and password in `LoginFragment`.
-   
-2. **ViewModel Invocation:**
-   - `LoginFragment` calls `AuthViewModel.login()`.
-
-3. **Repository Communication:**
-   - `AuthViewModel` forwards the login request to `AuthRepository.login()`.
-
-4. **Authentication:**
-   - `AuthRepository` queries Firestore to verify the password.
-   - Firebase Authentication handles user sign-in.
-
-5. **State Update:**
-   - `AuthRepository` updates `_authState`.
-
-6. **UI Update:**
-   - `LoginFragment` observes the result and updates the UI accordingly.
-
----
-
-## **Signup Flow**
-1. **User Input:**
-   - User enters name, email, and password in `SignupFragment`.
-
-2. **ViewModel Invocation:**
-   - `SignupFragment` calls `AuthViewModel.signup()`.
-
-3. **Repository Communication:**
-   - `AuthViewModel` forwards the signup request to `AuthRepository.signup()`.
-
-4. **Data Storage and Authentication:**
-   - `AuthRepository` hashes the password and stores user data in Firestore.
-   - Firebase Authentication creates the user account.
-
-5. **State Update:**
-   - `AuthRepository` updates `_authState`.
-
-6. **UI Update:**
-   - `SignupFragment` observes the result and updates the UI accordingly.
-
+## Navigation Flow
+1. **Splash Screen** → Login/Signup
+2. **Login/Signup** → MainActivity
+3. **Main Navigation (Bottom Navigation Bar):**
+   - Home → Job Listings
+   - Jobs Fragment → Job Saved / Job Tracking (Switch between them)
+   - Job Details → When clicking on a job
+   - Profile → User Information & Settings
+   - Notifications → Application Updates & Reminders

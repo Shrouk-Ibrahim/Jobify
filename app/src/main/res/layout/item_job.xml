@@ -65,10 +65,13 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="Apply"
-                android:textColor="@color/white"
+                android:enabled="true"
                 android:backgroundTint="@color/primaryColor"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                android:padding="12dp" />
+                android:padding="12dp"
+                android:textAllCaps="false"
+                android:layout_margin="4dp"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

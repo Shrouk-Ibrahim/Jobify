@@ -19,15 +19,16 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.firestore.Query
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.jobify.R
 import com.example.jobify.databinding.FragmentProfileBinding
 import com.example.jobify.ui.jobrequirements.SavedJobHorizontalAdapter
+import com.example.jobify.ui.jobrequirements.TrackJobAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -74,7 +75,7 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
         binding.savedJobsRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.savedJobsRecyclerView.adapter = savedJobAdapter
-
+fetchTrackedJobs()
         // Fetch user data
         fetchUserData()
 
@@ -112,6 +113,40 @@ class ProfileFragment : Fragment(), EditProfileDialogFragment.EditProfileDialogL
             // Navigate to TrackJobsFragment using the main NavController
             navController.navigate(R.id.trackJobsFragment)
         }
+    }
+    // ProfileFragment.kt (partial update)
+    private fun fetchTrackedJobs() {
+        db.collection("users").document(userId).collection("appliedJobs")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .limit(3)
+            .get()
+            .addOnSuccessListener { documents ->
+                val appliedJobs = documents.documents.mapNotNull { doc ->
+                    doc.toObject(AppliedJob::class.java)?.copy(id = doc.id)
+                }
+
+                if (appliedJobs.isNotEmpty()) {
+                    binding.trackApplicationsRecyclerView.visibility = View.VISIBLE
+                    binding.noTrackedJobsText.visibility = View.GONE
+
+                    val adapter = TrackJobAdapter(appliedJobs) { job ->
+                        val bundle = Bundle().apply {
+                            putInt("projectId", job.jobId.toInt())
+                        }
+                        findNavController().navigate(R.id.action_profileFragment_to_jobDetailsFragment, bundle)
+                    }
+
+                    binding.trackApplicationsRecyclerView.layoutManager =
+                        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                    binding.trackApplicationsRecyclerView.adapter = adapter
+                } else {
+                    binding.trackApplicationsRecyclerView.visibility = View.GONE
+                    binding.noTrackedJobsText.visibility = View.VISIBLE
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("ProfileFragment", "Error fetching tracked jobs", e)
+            }
     }
     private fun fetchUserData() {
         Log.d("ProfileFragment", "Fetching user data for userId: $userId")

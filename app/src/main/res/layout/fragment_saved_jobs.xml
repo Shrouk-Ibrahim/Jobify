@@ -38,27 +38,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/baseline_account_circle_24" />
 
-        <EditText
-            android:id="@+id/search_bar"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
-            android:layout_weight="1"
-            android:hint="Search for jobs..."
-            android:textColor="@color/grey"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:inputType="text"
-            android:background="@drawable/rounded_edit_text"
-            android:drawableEnd="@drawable/ic_search"
-            android:drawablePadding="8dp" />
 
-        <ImageView
-            android:id="@+id/filter_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="12dp"
-            android:contentDescription="Filter"
-            android:src="@drawable/ic_filter_" />
     </LinearLayout>
 
     <!-- Tabs Layout -->

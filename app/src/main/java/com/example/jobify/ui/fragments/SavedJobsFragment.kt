@@ -52,6 +52,7 @@ class SavedJobsFragment : Fragment() {
     ): View {
         binding = FragmentSavedJobsBinding.inflate(inflater, container, false)
         return binding.root
+        savedJobAdapter = SavedJobHorizontalAdapter(emptyList(), findNavController())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -87,21 +88,7 @@ class SavedJobsFragment : Fragment() {
             addItemDecoration(SpacingItemDecoration(16)) // Optional: Add spacing between items
         }
 
-        setupSearchBar()
 
-        binding.filterIcon.setOnClickListener {
-            val filterDialog = FilterDialogFragment()
-            filterDialog.setListener(object : FilterDialogFragment.FilterDialogListener {
-                override fun onFilterApplied(minBudget: Double?, maxBudget: Double?) {
-                    applyFilters(minBudget, maxBudget)
-                }
-
-                override fun onResetFilters() {
-                    resetFilters()
-                }
-            })
-            filterDialog.show(parentFragmentManager, "FilterDialog")
-        }
 
         fetchUserProfilePhoto()
         fetchSavedJobs()
@@ -114,59 +101,8 @@ class SavedJobsFragment : Fragment() {
             button.setTextColor(ContextCompat.getColor(requireContext(), R.color.primaryColor)) // Change to your desired default text color
         }
     }
-    private fun setupSearchBar() {
-        binding.searchBar.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s.toString().trim()
-                filterProjects(query)
-            }
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
-    }
-
-    private fun filterProjects(query: String) {
-        val originalList = savedJobAdapter.getOriginalList()
-        val filteredProjects = if (query.isEmpty()) {
-            originalList // Return the original list if the query is empty
-        } else {
-            originalList.filter { project ->
-                // Check if the title or description contains the query (case-insensitive)
-                project.title?.contains(query, ignoreCase = true) == true ||
-                        project.description?.contains(query, ignoreCase = true) == true
-            }
-        }
-        savedJobAdapter.updateJobs(filteredProjects)
-    }
-
-    private fun applyFilters(minBudget: Double?, maxBudget: Double?) {
-        val originalList = savedJobAdapter.getOriginalList()
-        val filteredProjects = originalList.filter { project ->
-            // Filter by budget
-           when {
-                minBudget != null && maxBudget != null -> {
-                    // Both min and max are provided
-                    (project.budget?.minimum ?: 0.0) >= minBudget && (project.budget?.maximum ?: 0.0) <= maxBudget
-                }
-                minBudget != null -> {
-                    // Only min is provided
-                    (project.budget?.minimum ?: 0.0) >= minBudget
-                }
-                maxBudget != null -> {
-                    // Only max is provided
-                    (project.budget?.maximum ?: 0.0) <= maxBudget
-                }
-                else -> true // No budget filter applie
-            }
-        }
-        savedJobAdapter.updateJobs(filteredProjects)
-    }
-    private fun resetFilters() {
-        val originalList = savedJobAdapter.getOriginalList()
-        savedJobAdapter.updateJobs(originalList)
-    }
 
     private fun fetchUserProfilePhoto() {
         db.collection("users").document(userId)

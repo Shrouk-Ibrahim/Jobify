@@ -2,61 +2,115 @@ package com.example.jobify.ui.fragments
 
 import android.os.Bundle
 import android.util.Base64
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.jobify.R
 import com.example.jobify.databinding.FragmentTrackJobsBinding
+import com.example.jobify.ui.jobrequirements.TrackJobAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class TrackJobsFragment : Fragment() {
-    private lateinit var binding: FragmentTrackJobsBinding
-    private lateinit var db: FirebaseFirestore // Declare db as lateinit
+    private var _binding: FragmentTrackJobsBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var db: FirebaseFirestore
+    private lateinit var trackJobAdapter: TrackJobAdapter
+    private var appliedJobsListener: ListenerRegistration? = null
+
     private val userId: String
         get() = FirebaseAuth.getInstance().currentUser?.uid ?: throw IllegalStateException("User not logged in")
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTrackJobsBinding.inflate(inflater, container, false)
-        db = FirebaseFirestore.getInstance() // Initialize db here
+        _binding = FragmentTrackJobsBinding.inflate(inflater, container, false)
+        db = FirebaseFirestore.getInstance()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         fetchUserProfilePhoto()
+        fetchAppliedJobs()
+    }
 
-        // Set the initial state for the tabs
-        setTabSelected(binding.tabSavedJobs, false)
-        setTabSelected(binding.tabTrackJobs, true)
-
-        binding.profilePhoto.setOnClickListener {
-            findNavController().navigate(R.id.profileFragment)
+    // TrackJobsFragment.kt (partial update)
+    private fun setupUI() {
+        trackJobAdapter = TrackJobAdapter(emptyList()) { job ->
+            // Navigate to JobDetailsFragment with jobId
+            val bundle = Bundle().apply {
+                putInt("projectId", job.jobId.toInt())
+            }
+            findNavController().navigate(R.id.action_trackJobsFragment_to_jobDetailsFragment, bundle)
         }
 
-        // Set up click listeners for the tabs
-        binding.tabSavedJobs.setOnClickListener {
-            setTabSelected(binding.tabSavedJobs, true)
-            setTabSelected(binding.tabTrackJobs, false)
-            findNavController().navigate(R.id.action_trackJobsFragment_to_savedJobsFragment)
-        }
 
-        binding.tabTrackJobs.setOnClickListener {
-            setTabSelected(binding.tabSavedJobs, false)
-            setTabSelected(binding.tabTrackJobs, true)
-            // No need to navigate here since we are already in TrackJobsFragment
+
+        binding.apply {
+            trackJobsRecyclerView.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = trackJobAdapter
+                setHasFixedSize(true)
+            }
+
+            setTabSelected(tabSavedJobs, false)
+            setTabSelected(tabTrackJobs, true)
+
+            tabSavedJobs.setOnClickListener {
+                findNavController().navigate(R.id.action_trackJobsFragment_to_savedJobsFragment)
+            }
+
+            profilePhoto.setOnClickListener {
+                findNavController().navigate(R.id.profileFragment)
+            }
         }
     }
+
+    private fun navigateToJobDetails(job: AppliedJob) {
+        // Implement navigation to job details with job data
+        Toast.makeText(requireContext(), "Opening job details", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun fetchAppliedJobs() {
+        appliedJobsListener = db.collection("users").document(userId).collection("appliedJobs")
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    showError("Failed to load applied jobs")
+                    binding.emptyStateTextView.visibility = View.VISIBLE
+                    binding.trackJobsRecyclerView.visibility = View.GONE
+                    return@addSnapshotListener
+                }
+
+                val appliedJobs = value?.documents?.mapNotNull { doc ->
+                    doc.toObject(AppliedJob::class.java)?.copy(id = doc.id)
+                } ?: emptyList()
+
+                if (appliedJobs.isEmpty()) {
+                    binding.emptyStateTextView.visibility = View.VISIBLE
+                    binding.trackJobsRecyclerView.visibility = View.GONE
+                } else {
+                    binding.emptyStateTextView.visibility = View.GONE
+                    binding.trackJobsRecyclerView.visibility = View.VISIBLE
+                    trackJobAdapter.updateJobs(appliedJobs)
+                }
+            }
+    }
+
     private fun fetchUserProfilePhoto() {
         db.collection("users").document(userId)
             .addSnapshotListener { document, error ->
@@ -78,13 +132,38 @@ class TrackJobsFragment : Fragment() {
             }
     }
 
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
     private fun setTabSelected(button: Button, isSelected: Boolean) {
-        if (isSelected) {
-            button.setBackgroundResource(R.drawable.button_tab_background_selected) // Create this drawable
-            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.white)) // Change to your desired selected text color
-        } else {
-            button.setBackgroundResource(R.drawable.button_tab_background) // Default background
-            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.primaryColor)) // Change to your desired default text color
-        }
+        button.isSelected = isSelected
+        button.setBackgroundResource(
+            if (isSelected) R.drawable.button_tab_background_selected
+            else R.drawable.button_tab_background
+        )
+        button.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                if (isSelected) R.color.white else R.color.primaryColor
+            )
+        )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        appliedJobsListener?.remove()
+        _binding = null
     }
 }
+
+data class AppliedJob(
+    val id: String = "",
+    val jobId: String = "",
+    val jobTitle: String = "",
+    val bidAmount: Double = 0.0,
+    val deliveryTime: String = "",
+    val description: String = "",
+    val status: String = "Pending",
+    val timestamp: Long = System.currentTimeMillis()
+)
