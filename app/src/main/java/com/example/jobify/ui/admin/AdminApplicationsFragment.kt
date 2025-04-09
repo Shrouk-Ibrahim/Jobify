@@ -11,8 +11,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jobify.databinding.FragmentAdminApplicationsBinding
+import com.example.jobify.utils.NotificationHelper
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AdminApplicationsFragment : Fragment() {
     private var _binding: FragmentAdminApplicationsBinding? = null
@@ -116,27 +120,60 @@ class AdminApplicationsFragment : Fragment() {
             }
     }
 
+    // In AdminApplicationsFragment.kt
     private fun updateApplicationStatus(applicationId: String, newStatus: String) {
         selectedUserId?.let { userId ->
             binding.progressBar.visibility = View.VISIBLE
+
             db.collection("users").document(userId)
                 .collection("appliedJobs").document(applicationId)
-                .update("status", newStatus)
-                .addOnSuccessListener {
-                    binding.progressBar.visibility = View.GONE
-                    fetchUserApplications(userId) // Refresh the list
-                    Toast.makeText(requireContext(), "Status updated to $newStatus", Toast.LENGTH_SHORT).show()
+                .get()
+                .addOnSuccessListener { document ->
+                    val jobTitle = document.getString("jobTitle") ?: "your application"
+
+                    // Update the status
+                    db.collection("users").document(userId)
+                        .collection("appliedJobs").document(applicationId)
+                        .update("status", newStatus)
+                        .addOnSuccessListener {
+                            binding.progressBar.visibility = View.GONE
+                            fetchUserApplications(userId)
+
+                            // Send notification
+                            val title = "Application Update"
+                            val message = when (newStatus.lowercase()) {
+                                "accepted" -> "Congratulations! Your application for $jobTitle has been approved."
+                                "rejected" -> "Your application for $jobTitle has been rejected."
+                                else -> "Your application for $jobTitle has been updated to $newStatus."
+                            }
+
+                            // In the updateApplicationStatus function, replace the notification part with:
+                            CoroutineScope(Dispatchers.IO).launch {
+                                NotificationHelper.sendNotification(
+                                    requireContext(),
+                                    userId,
+                                    title,
+                                    message,
+                                    jobTitle,
+                                    newStatus
+                                )
+                            }
+
+                            Toast.makeText(requireContext(), "Status updated to $newStatus", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(requireContext(), "Failed to update status: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
                 }
                 .addOnFailureListener { e ->
                     binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), "Failed to update status: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Failed to get application details: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         } ?: run {
             Toast.makeText(requireContext(), "No user selected", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    override fun onDestroyView() {
+    }    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }

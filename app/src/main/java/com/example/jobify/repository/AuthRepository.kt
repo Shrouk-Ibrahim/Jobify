@@ -28,7 +28,7 @@ class AuthRepository {
         // Set the authentication state to Loading
         _authState.value = Resource.Loading()
         // Check for admin credentials first
-        if (email == "admin@gmail.com" && password == "admin123Ys") {
+        if (email == "admin@gmail.com" && password == "27102001Ys") {
             handleAdminLogin(email, password)
             return
         }
@@ -216,9 +216,9 @@ class AuthRepository {
     }
 
     // Helper function to verify passwords using BCrypt
-    private fun verifyPassword(password: String, hashedPassword: String): Boolean {
-        return BCrypt.verifyer().verify(password.toCharArray(), hashedPassword).verified
-    }
+//    private fun verifyPassword(password: String, hashedPassword: String): Boolean {
+//        return BCrypt.verifyer().verify(password.toCharArray(), hashedPassword).verified
+//    }
 
     companion object {
         private const val TAG = "AuthRepository"
