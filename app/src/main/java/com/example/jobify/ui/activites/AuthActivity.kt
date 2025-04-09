@@ -17,13 +17,12 @@ class AuthActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment_auth) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Remove ActionBar setup
     }
 
     // Handle back button without ActionBar
-    override fun onSupportNavigateUp(): Boolean {
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment_auth) as? NavHostFragment
-        return navHostFragment?.navController?.navigateUp() ?: false
-    }
+//    override fun onSupportNavigateUp(): Boolean {
+//        val navHostFragment = supportFragmentManager
+//            .findFragmentById(R.id.nav_host_fragment_auth) as? NavHostFragment
+//        return navHostFragment?.navController?.navigateUp() ?: false
+//    }
 }

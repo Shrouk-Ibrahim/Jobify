@@ -46,7 +46,11 @@ class JobDetailsFragment : Fragment() {
 
         // Retrieve projectId from arguments
         projectId = arguments?.getInt("projectId") ?: -1
-
+        // Set up toolbar
+        binding.toolbar.setNavigationOnClickListener {
+            // Handle back button click
+            requireActivity().onBackPressed()
+        }
         // Initialize ViewModel
         val apiService = FreelancerRetrofitClient.instance
         val viewModelFactory = JobViewModelFactory(apiService)

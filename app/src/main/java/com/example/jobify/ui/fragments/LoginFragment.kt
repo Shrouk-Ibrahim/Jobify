@@ -5,7 +5,6 @@ import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,8 +13,12 @@ import com.example.jobify.R
 import com.example.jobify.databinding.FragmentLoginBinding
 import com.example.jobify.viewmodel.AuthViewModel
 import com.example.jobify.ui.Resource
+import com.example.jobify.utils.NotificationHelper
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -65,14 +68,13 @@ class LoginFragment : Fragment() {
                 binding.passwordLoginField.error = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
                 return@setOnClickListener
             }
-            viewModel.login("admin@gmail.com", "admin123Ys")
+            viewModel.login("admin@gmail.com", "27102001Ys")
             viewModel.login(email, password)
         }
 
         binding.signUpLink.setOnClickListener {
             safeNavigate(R.id.action_loginFragment_to_signupFragment)
         }
-
 
         viewModel.authState.observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -88,8 +90,6 @@ class LoginFragment : Fragment() {
                                 navigateToMainActivity()
                             }
                         }
-                    } ?: run {
-                        showError("User authentication failed")
                     }
                 }
                 is Resource.Error -> {
@@ -100,16 +100,14 @@ class LoginFragment : Fragment() {
     }
 
     private fun showLoading() {
-        Toast.makeText(requireContext(), "Logging in...", Toast.LENGTH_SHORT).show()
+        // Loading state handling without Toast
     }
 
     private fun navigateToAdminDashboard() {
-        Toast.makeText(requireContext(), "Admin login successful!", Toast.LENGTH_SHORT).show()
         safeNavigate(R.id.action_loginFragment_to_adminDashboardFragment)
     }
 
     private fun navigateToMainActivity() {
-        Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
         safeNavigate(R.id.action_loginFragment_to_mainActivity)
     }
 
@@ -122,13 +120,9 @@ class LoginFragment : Fragment() {
                 binding.passwordLoginField.error = message
             }
             else -> {
-                showError("Login failed: ${message ?: "Unknown error"}")
+                // Error handling without Toast
             }
         }
-    }
-
-    private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun safeNavigate(actionId: Int) {
@@ -137,7 +131,7 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(actionId)
             }
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Navigation error: ${e.message}", Toast.LENGTH_SHORT).show()
+            // Navigation error handling without Toast
         }
     }
 

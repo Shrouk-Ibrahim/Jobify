@@ -1,15 +1,21 @@
 <resources>
+
     <string name="profile_name">No Name</string>
+    <string name="app_name">Jobify</string>
     <string name="job_title">No Job Title</string>
     <string name="faculty_text">No Faculty</string>
     <string name="address_text">No Address</string>
     <string name="contact_info">Contact Info</string>
     <!-- Files Section -->
     <string name="my_files">My Files</string>
+    <string name="job_details">Job Details</string>
     <string name="cv">CV    </string>
     <string name="cvStatusText">click to show</string>
-
-
+    <string name="no_notifications">No notifications yet</string>
+    <string name="no_notifications_subtitle">Your notifications will appear here</string>
+    <string name="default_notification_message">Your application status has been updated</string>
+    <string name="default_notification_channel_id">default_channel_id</string>
+    <string name="default_notification_channel_name">Default Channel</string>
     <!-- Saved Jobs Section -->
     <string name="saved_jobs">Saved Jobs</string>
     <string name="see_more">See More</string>
