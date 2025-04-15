@@ -23,15 +23,9 @@ class AuthRepository {
     // LiveData exposed to the UI layer to observe authentication state changes
     val authState: LiveData<Resource<FirebaseUser>> get() = _authState
 
-    // Function to handle user login
+
     fun login(email: String, password: String) {
-        // Set the authentication state to Loading
         _authState.value = Resource.Loading()
-        // Check for admin credentials first
-        if (email == "admin@gmail.com" && password == "27102001Ys") {
-            handleAdminLogin(email, password)
-            return
-        }
 
         // First, check if the email exists in Firestore
         db.collection("users")
@@ -77,61 +71,7 @@ class AuthRepository {
                 Log.w(TAG, "Firestore query failed", exception)
             }
     }
-    private fun handleAdminLogin(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = firebaseAuth.currentUser
-                    if (user != null) {
-                        // Ensure admin exists in Firestore with isAdmin flag
-                        ensureAdminExists(user, email, password)
-                    } else {
-                        _authState.value = Resource.Error("Admin user is null")
-                    }
-                } else {
-                    _authState.value = Resource.Error("Admin login failed")
-                }
-            }
-    }
 
-    private fun ensureAdminExists(user: FirebaseUser, email: String, password: String) {
-        db.collection("users").document(user.uid)
-            .get()
-            .addOnSuccessListener { document ->
-                if (!document.exists()) {
-                    // Create admin user in Firestore
-                    val adminUser = hashMapOf(
-                        "name" to "Admin",
-                        "email" to email,
-                        "passwordHash" to hashPassword(password),
-                        "userId" to user.uid,
-                        "isAdmin" to true
-                    )
-                    db.collection("users").document(user.uid)
-                        .set(adminUser)
-                        .addOnSuccessListener {
-                            _authState.value = Resource.Success(user)
-                        }
-                        .addOnFailureListener { e ->
-                            _authState.value = Resource.Success(user) // Proceed anyway
-                        }
-                } else {
-                    // Update existing user to ensure isAdmin flag is set
-                    db.collection("users").document(user.uid)
-                        .update("isAdmin", true)
-                        .addOnSuccessListener {
-                            _authState.value = Resource.Success(user)
-                        }
-                        .addOnFailureListener {
-                            _authState.value = Resource.Success(user) // Proceed anyway
-                        }
-                }
-            }
-            .addOnFailureListener {
-                _authState.value = Resource.Success(user) // Proceed anyway
-            }
-    }
-    // In AuthRepository.kt
     fun checkAdminStatus(userId: String, callback: (Boolean) -> Unit) {
         db.collection("users").document(userId)
             .get()
